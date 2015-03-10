@@ -36,7 +36,7 @@ setup(
     name='smalisca',
     version='1.0-rc1',
     description='Static code analysis tool for Smali files',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     url='http://github.com/dorneanu/smalisca',
     author='Victor Dorneanu',
     author_email='cyneox@nullsecurity.net',

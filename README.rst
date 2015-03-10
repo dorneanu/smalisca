@@ -38,7 +38,7 @@ At the moment there are some few major functionalities like:
 
   You can then **export** the results as **JSON** or **SQLite**.
 
-  Have a loot at the :ref:`parsing page <page-parsing>` for more information.
+  Have a loot at the `parsing page <http://smalisca.readthedocs.org/en/latest/parsing.html>`_ for more information.
 
 
 
@@ -72,7 +72,7 @@ At the moment there are some few major functionalities like:
     $ ./smalisca.py analyzer -i results.sqlite -f sqlite -c cmd.txt
     ...
 
-  Have a loot at the :ref:`analysis page <page-analysis>` for more information.
+  Have a loot at the `analysis page <http://smalisca.readthedocs.org/en/latest/analysis.html>`_ for more information.
 
 
 
@@ -96,18 +96,18 @@ At the moment there are some few major functionalities like:
     :: INFO       Wrote results to /tmp/classes.pdf
     smalisca>
 
-  Have a loot at the :ref:`drawing page <page-drawing>` for more information.
+  Have a loot at the `drawing page <http://smalisca.readthedocs.org/en/latest/drawing.html>`_ for more information.
 
 Screenshots
 ===========
 
-Have a look at the :ref:`screenshots page <page-screenshots>`.
+Have a look at the `screenshots page <http://smalisca.readthedocs.org/en/latest/screenshots.html>`_.
 
 
 Installation
 ============
 
-Refer to the :ref:`installation page <page-installation>`.
+Refer to the `installation page <http://smalisca.readthedocs.org/en/latest/installation.html>`_.
 
 
 How to use it
@@ -185,7 +185,7 @@ I'll first **parse** some directory for **Smali** files before doing the analysi
     :: INFO         Wrote results to fakebanker.sqlite
     :: INFO       Finished scanning
 
-Also have a look at the :ref:`parsing page <page-parsing>` for further information.
+Also have a look at the `parsing page <http://smalisca.readthedocs.org/en/latest/parsing.html>`_ for further information.
 
 
 Analyzing
@@ -215,13 +215,13 @@ directly or use *smaliscas* **analysis** features::
     | 10 | Landroid/support/v4/app/ShareCompat$ShareCompatImpl                                     | interface abstract | Landroid.support.v4.app  | 5     |
     +----+-----------------------------------------------------------------------------------------+--------------------+--------------------------+-------+
 
-Also refer to the :ref:`analysis page <page-analysis>` for more available **commands** and options.
+Also refer to the `analysis page <http://smalisca.readthedocs.org/en/latest/analysis.html>`_ for more available **commands** and options.
 
 
 Drawing
 -------
 
-Please refer to the :ref:`drawing page <page-drawing>` for full examples.
+Please refer to the `drawing page <http://smalisca.readthedocs.org/en/latest/drawing.html>`_ for full examples.
 
 
 License
@@ -234,11 +234,11 @@ Credits
 
 This tool is dedicated to **Lică**. Many thanks go to:
 
-* `Stephen McAllister <https://de.linkedin.com/pub/stephen-mcallister/13/843/71a>`
+* `Stephen McAllister <https://de.linkedin.com/pub/stephen-mcallister/13/843/71a>`_
 
     * Many thanks for all those hours full of APK debugging and great ideas
 
-* `nullsecurity.net <http://nullsecurity.net>`
+* `nullsecurity.net <http://nullsecurity.net>`_
 
     * Hack the planet!
 
