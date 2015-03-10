@@ -1,0 +1,6 @@
+cement==2.4.0
+graphviz==0.4.3
+prettytable==0.7.2
+pyfiglet==0.7.2
+smalisca==1.0rc1
+SQLAlchemy==0.9.8

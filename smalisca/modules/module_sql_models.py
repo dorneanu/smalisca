@@ -1,0 +1,380 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# -----------------------------------------------------------------------------
+# File:         modules/module_sql_models.py
+# Created:      2015-01-29
+# Purpose:      Model classes, methods, properties, calls as SQL objects
+#
+# Copyright
+# -----------------------------------------------------------------------------
+# The MIT License (MIT)
+#
+# Copyright (c) 2015 Victor Dorneanu <info AAET dornea DOT nu>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+# IN THE SOFTWARE.
+
+
+import sqlalchemy as sql
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, scoped_session, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+
+import smalisca.core.smalisca_config as config
+from smalisca.core.smalisca_logging import log
+
+__author__ = config.PROJECT_AUTHOR
+
+Base = declarative_base()
+
+# Tables defining relationships between entities
+# Classes <-> Properties
+class_properties_table = sql.Table(
+    'class_properties', Base.metadata,
+    sql.Column('class_id', sql.Integer, ForeignKey('classes.id')),
+    sql.Column('prop_id', sql.Integer, ForeignKey('properties.id'))
+)
+
+# Classes <-> Methodsß[Maß
+class_methods_table = sql.Table(
+    'class_methods', Base.metadata,
+    sql.Column('class_id', sql.Integer, ForeignKey('classes.id')),
+    sql.Column('method_id', sql.Integer, ForeignKey('methods.id'))
+)
+
+
+class SmaliClass(Base):
+    """Models a Smali class"""
+    __tablename__ = "classes"
+
+    # Constraints
+    __table_args__ = (
+        sql.UniqueConstraint(
+            'class_name', 'class_type', 'depth', 'path',
+             name='unique_class'),
+    )
+
+    # Fields
+    id = sql.Column(sql.Integer, primary_key=True)
+    class_name = sql.Column(sql.Text)
+    class_type = sql.Column(sql.Text)
+    class_package = sql.Column(sql.Text)
+    depth = sql.Column(sql.Integer)
+    path = sql.Column(sql.Text)
+
+    # Relationships
+    properties = relationship(
+        'SmaliProperty', secondary=class_properties_table)
+    methods = relationship(
+        'SmaliMethod', secondary=class_methods_table)
+
+    # FIXME: Add prettytable
+    def to_string(self):
+        s = """
+        --------
+        ID: \t%d
+        Name: \t%s
+        Type: \t%s
+        Depth: \t%s
+        Path: \t%s
+        --------
+        """ % (
+            self.id, self.class_name, self.class_type,
+            self.depth, self.path
+        )
+        return s
+
+    def __str__(self):
+        return self.to_string()
+
+    def __unicode__(self):
+        return self.to_string()
+
+
+class SmaliProperty(Base):
+    """Models a Smali class property"""
+    __tablename__ = "properties"
+
+    # Constraints
+    __table_args__ = (
+        sql.UniqueConstraint(
+            'property_name', 'property_type',
+            'property_info', 'property_class',
+            name='unique_property'
+        ),
+    )
+
+    # Fields
+    id = sql.Column(sql.Integer, primary_key=True)
+    property_name = sql.Column(sql.Text)
+    property_type = sql.Column(sql.Text)
+    property_info = sql.Column(sql.Text)
+    property_class = sql.Column(sql.Text)
+
+    def to_string(self):
+        s = """
+        --------
+        ID: \t%d
+        Name: \t%s
+        Type: \t%s
+        Info: \t%s
+        Class: \t%s
+        --------
+        """ % (self.id, self.property_name, self.property_type,
+               self.property_info, self.property_class)
+        return s
+
+    def __str__(self):
+        return self.to_string()
+
+    def __unicode__(self):
+        return self.to_string()
+
+
+class SmaliMethod(Base):
+    """Models a Smali class method"""
+    __tablename__ = "methods"
+
+    # Constraints
+    __table_args__ = (
+        sql.UniqueConstraint(
+            'method_name', 'method_type', 'method_args',
+            'method_ret', 'method_class',
+            name='unique_method'
+        ),
+    )
+
+    # Fields
+    id = sql.Column(sql.Integer, primary_key=True)
+    method_name = sql.Column(sql.Text)
+    method_type = sql.Column(sql.Text)
+    method_args = sql.Column(sql.Text)
+    method_ret = sql.Column(sql.Text)
+    method_class = sql.Column(sql.Text)
+
+    # FIXME: Add prettytable
+    def to_string(self):
+        s = """
+        --------
+        ID: \t%d
+        Name: \t%s
+        Type: \t%s
+        Args: \t%s
+        Ret: \t%s
+        Class: \t%s
+        --------
+        """ % (self.id, self.method_name, self.method_type,
+               self.method_args, self.method_ret, self.method_class)
+        return s
+
+    def __str__(self):
+        return self.to_string()
+
+    def __unicode__(self):
+        return self.to_string()
+
+
+class SmaliCall(Base):
+    """Models a Smali call (invoke-*)"""
+    __tablename__ = "calls"
+
+    # Fields
+    id = sql.Column(sql.Integer, primary_key=True)
+
+    # Source class/method/args
+    from_class = sql.Column(sql.Text)
+    from_method = sql.Column(sql.Text)
+    local_args = sql.Column(sql.Text)
+
+    # Destination class/method/args
+    dst_class = sql.Column(sql.Text)
+    dst_method = sql.Column(sql.Text)
+    dst_args = sql.Column(sql.Text)
+
+    # Return value
+    ret = sql.Column(sql.Text)
+
+    # FIXME: Add prettytable
+    def to_string(self):
+        s = """
+        --------
+        ID: \t%d
+
+        From:
+        \tClass: \t%s
+        \tMethod: \t%s
+
+        To:
+        \tClass: \t%s
+        \tMethod: \t%s
+
+        Args:
+        \tLocal: \t%s
+        \tDest: \t%s
+        --------
+        """ % (self.id, self.from_class, self.from_method,
+               self.dst_class, self.dst_method,
+               self.local_args, self.dst_args)
+
+        return s
+
+    def __str__(self):
+        return self.to_string()
+
+    def __unicode__(self):
+        return self.to_string()
+
+
+class AppSQLModel:
+    """Models an App as a SQL model"""
+
+    def __init__(self, sqlitedb):
+        self.engine = sql.create_engine('sqlite:///' + sqlitedb)
+        Base.metadata.create_all(self.engine)
+
+        # Create session
+        self.session = scoped_session(sessionmaker(
+            autoflush=True, autocommit=False,
+            bind=self.engine
+        ))
+        self.db = self.session()
+
+        # Internal instances
+        self.classes = {}
+        self.properties = []
+        self.methods = []
+        self.calls = []
+
+    def get_class_by_name(self, classname):
+        """Returns class obj specified by name"""
+        classes = self.db.query(SmaliClass)
+        class_obj = classes.filter(SmaliClass.class_name == classname)
+
+        # Check if any results:
+        try:
+            if self.db.query(class_obj.exists()):
+                return class_obj.one()
+
+        except sql.orm.exc.NoResultFound:
+            log.warn("No result found")
+            return None
+
+    def get_classes(self):
+        """Returns all classes"""
+        return self.db.query(SmaliClass).all()
+
+    def get_properties(self):
+        """Returns all properties"""
+        return self.db.query(SmaliProperty).all()
+
+    def get_methods(self):
+        """Return all methods"""
+        return self.db.query(SmaliMethod).all()
+
+    def get_calls(self):
+        """Return all calls"""
+        return self.db.query(SmaliCall).all()
+
+    def add_class(self, class_obj):
+        """Add new class"""
+        log.debug(class_obj)
+        new_class = SmaliClass(
+            class_name=class_obj['name'],
+            class_type=class_obj['type'],
+            class_package=class_obj['package'],
+            depth=class_obj['depth'],
+            path=class_obj['path']
+        )
+
+        # Add new class
+        self.classes[class_obj['name']] = new_class
+        self.db.merge(new_class)
+
+    def add_propery(self, prop):
+        """Adds property to class"""
+        class_obj = self.get_class_by_name(prop['class'])
+        new_prop = SmaliProperty(
+            property_name=prop['name'],
+            property_type=prop['type'],
+            property_info=prop['info'],
+            property_class=prop['class']
+        )
+
+        # Append new property to class
+        class_obj.properties.append(new_prop)
+
+        # Add to DB
+        try:
+            self.db.merge(class_obj)
+
+        except sql.exc.IntegrityError:
+            self.db.rollback()
+            log.error("Found NOT unique values")
+
+    def add_method(self, method):
+        """Adds property to class"""
+        class_obj = self.get_class_by_name(method['class'])
+        new_method = SmaliMethod(
+            method_name=method['name'],
+            method_type=method['type'],
+            method_args=method['args'],
+            method_ret=method['return'],
+            method_class=method['class']
+        )
+
+        # Append new method to class
+        class_obj.methods.append(new_method)
+
+        # Add to DB
+        try:
+            self.db.merge(class_obj)
+
+        except sql.exc.IntegrityError:
+            self.db.rollback()
+            log.error("Found NOT unique values")
+
+    def add_call(self, call):
+        """Adds calls to class"""
+
+        # Create new call object
+        new_call = SmaliCall(
+            # Origin
+            from_class=call['from_class'],
+            from_method=call['from_method'],
+            local_args=call['local_args'],
+
+            # Destination
+            dst_class=call['to_class'],
+            dst_method=call['to_method'],
+            dst_args=call['dst_args'],
+
+            # Return
+            ret=call['return']
+        )
+
+        # Add new call to DB
+        self.db.merge(new_call)
+
+    def get_session(self):
+        """Returns DB session"""
+        return self.db
+
+    def commit(self):
+        """Commit changes/transactions"""
+        self.db.commit()

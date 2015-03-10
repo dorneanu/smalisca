@@ -1,0 +1,8 @@
+local
+__pycache__/
+*.py[cod]
+*.sw[po]
+*.vim-template*
+env
+src/tmp
+**tmp**
