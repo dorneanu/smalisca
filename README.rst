@@ -1,5 +1,5 @@
 *****************************************
-Smalisca - Static Code Analysis for Smali
+Static Code Analysis for Smali
 *****************************************
 
 If you ever have looked at Android applications you know to appreciate
