@@ -34,11 +34,9 @@ import abc
 
 
 class AnalysisBase(object):
-
-    __metaclass__ = abc.ABCMeta
     """Basic analysis class"""
 
-    """ Search functionalities """
+    __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
     def search_class(self, args):
@@ -58,15 +56,4 @@ class AnalysisBase(object):
     @abc.abstractmethod
     def search_call(self, args):
         """Search for call"""
-        pass
-
-    """ Cross-References (xref) """
-    @abc.abstractmethod
-    def xref_class(self, args):
-        """Find xref to class"""
-        pass
-
-    @abc.abstractmethod
-    def xref_method(self, args):
-        """Find xref to method"""
         pass

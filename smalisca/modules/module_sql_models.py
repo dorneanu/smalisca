@@ -30,6 +30,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+"""Represent an App as SQL data"""
 
 import sqlalchemy as sql
 from sqlalchemy import ForeignKey
@@ -60,14 +61,25 @@ class_methods_table = sql.Table(
 
 
 class SmaliClass(Base):
-    """Models a Smali class"""
+    """Models a Smali class
+
+    Attributes:
+        id (integer): Primary key
+        class_name (str): Name of the class
+        class_type (str): Type of the class (public, abstract, etc.)
+        class_package (str): Name of the package the class belongs to
+        depth (integer): Some path depth (not used)
+        path (str): Location of file where the class has been found
+        properties (list): List of properties (:class:`SmaliProperty`)
+        methods (list): List of methods (:class:`SmaliMethod`)
+
+    """
     __tablename__ = "classes"
 
     # Constraints
     __table_args__ = (
         sql.UniqueConstraint(
-            'class_name', 'class_type', 'depth', 'path',
-             name='unique_class'),
+            'class_name', 'class_type', 'depth', 'path', name='unique_class'),
     )
 
     # Fields
@@ -108,7 +120,16 @@ class SmaliClass(Base):
 
 
 class SmaliProperty(Base):
-    """Models a Smali class property"""
+    """Models a Smali class property
+
+    Attributes:
+        id (integer): Primary ke
+        property_name (str): Name of the property
+        property_type (str): Property type (e.g. Ljava/lang/String)#
+        property_info (str): Additional property info (private, static, finale, etc.)
+        property_class (str): The class this property belongs to
+
+    """
     __tablename__ = "properties"
 
     # Constraints
@@ -148,7 +169,16 @@ class SmaliProperty(Base):
 
 
 class SmaliMethod(Base):
-    """Models a Smali class method"""
+    """Models a Smali class method
+
+    Attributes:
+        id (integer): Primary key
+        method_name (str): Name of the method
+        method_type (str): Method type (public, abstract, constructor)
+        method_args (str): Method arguments (e.g. Landroid/os/Parcelable;Ljava/lang/ClassLoader;)
+        method_ret (str): Methods return value (Z, I, [I, etc.)
+        method_class (str): The class the method belongs to
+    """
     __tablename__ = "methods"
 
     # Constraints
@@ -191,7 +221,19 @@ class SmaliMethod(Base):
 
 
 class SmaliCall(Base):
-    """Models a Smali call (invoke-*)"""
+    """Models a Smali call (invoke-*)
+
+    Attributes:
+        id (integer): Primary key
+        from_class (str): Name of calling class
+        from_method (str): Name of calling method
+        local_args (str): Local arguments
+        dst_class (str): Called class
+        dst_method (str): Called method
+        dst_args (str): Called args
+        ret (str): Return value
+
+    """
     __tablename__ = "calls"
 
     # Fields
@@ -242,9 +284,29 @@ class SmaliCall(Base):
 
 
 class AppSQLModel:
-    """Models an App as a SQL model"""
+    """Models an App as a SQL model
+
+    This class modelates an application (:class:`smalisca.core.smalisca_app` as a SQL model.
+
+    Attributes:
+        db (session): A SQLAlchemy DB session
+        classes (dict): Dict of classes
+        properties (list): List of properties
+        methods (list): List of methods
+        calls (list): List of calls
+
+    """
 
     def __init__(self, sqlitedb):
+        """Init the app SQL model
+
+        Args:
+            sqlitedb (str): SQLite file name
+
+        Returns:
+            AppSqlModel: Instance of AppSQLModel
+
+        """
         self.engine = sql.create_engine('sqlite:///' + sqlitedb)
         Base.metadata.create_all(self.engine)
 
@@ -262,7 +324,15 @@ class AppSQLModel:
         self.calls = []
 
     def get_class_by_name(self, classname):
-        """Returns class obj specified by name"""
+        """Returns class obj specified by name
+
+        Args:
+            classname (str): Name of the class
+
+        Returns
+           class object
+
+        """
         classes = self.db.query(SmaliClass)
         class_obj = classes.filter(SmaliClass.class_name == classname)
 
@@ -276,23 +346,48 @@ class AppSQLModel:
             return None
 
     def get_classes(self):
-        """Returns all classes"""
+        """Returns all classes
+
+        Returns:
+            list: Return list of class objects
+
+        """
         return self.db.query(SmaliClass).all()
 
     def get_properties(self):
-        """Returns all properties"""
+        """Returns all properties
+
+        Returns:
+            list: Return list of property objects
+
+        """
         return self.db.query(SmaliProperty).all()
 
     def get_methods(self):
-        """Return all methods"""
+        """Return all methods
+
+        Returns:
+            list: Return list of method objects
+
+        """
         return self.db.query(SmaliMethod).all()
 
     def get_calls(self):
-        """Return all calls"""
+        """Return all calls
+
+        Returns:
+            list: Return list of call objects
+
+        """
         return self.db.query(SmaliCall).all()
 
     def add_class(self, class_obj):
-        """Add new class"""
+        """Add new class
+
+        Args:
+            class_obj (dict): Class object to insert
+
+        """
         log.debug(class_obj)
         new_class = SmaliClass(
             class_name=class_obj['name'],
@@ -307,7 +402,12 @@ class AppSQLModel:
         self.db.merge(new_class)
 
     def add_propery(self, prop):
-        """Adds property to class"""
+        """Adds property to class
+
+        Args:
+            prop (dict): Property object to insert
+
+        """
         class_obj = self.get_class_by_name(prop['class'])
         new_prop = SmaliProperty(
             property_name=prop['name'],
@@ -328,7 +428,12 @@ class AppSQLModel:
             log.error("Found NOT unique values")
 
     def add_method(self, method):
-        """Adds property to class"""
+        """Adds property to class
+
+        Args:
+            method (dict): Method object to insert
+
+        """
         class_obj = self.get_class_by_name(method['class'])
         new_method = SmaliMethod(
             method_name=method['name'],
@@ -350,7 +455,12 @@ class AppSQLModel:
             log.error("Found NOT unique values")
 
     def add_call(self, call):
-        """Adds calls to class"""
+        """Adds calls to class
+
+        Args:
+            call (dict): Call object to insert
+
+        """
 
         # Create new call object
         new_call = SmaliCall(
@@ -372,7 +482,13 @@ class AppSQLModel:
         self.db.merge(new_call)
 
     def get_session(self):
-        """Returns DB session"""
+        """Returns DB session
+
+        Returns:
+
+            Session: Returns DB session
+
+        """
         return self.db
 
     def commit(self):

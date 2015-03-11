@@ -31,12 +31,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+"""Basic interface for modules"""
+
 import abc
 
 
 class ModuleBase(object):
     """Base module abstract class. All other modules are subclasses
        of this class.
+
+    Attributes:
+        info (str): Module name
+        parameters (dic): Modules parameters
+
     """
     ___metaclass__ = abc.ABCMeta
 

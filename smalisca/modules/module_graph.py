@@ -30,15 +30,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+"""Graph module for visualizing results"""
+
 import graphviz as gv
 
 from smalisca.core.smalisca_config import GraphConfig
 from smalisca.core.smalisca_logging import log
 
 
-# Useful functions
+# Useful functions found on http://matthiaseisen.com/articles/graphviz/
 def add_nodes(graph, nodes):
-    """ Add node(s) to graph """
+    """ Add node(s) to graph
+
+    Args:
+        graph (Graph): Graph to add node(s) to
+        nodes (list): List of nodes
+
+    Returns:
+        Graph: Return the modified graph
+
+    """
     for n in nodes:
         if isinstance(n, tuple):
             graph.node(n[0], **n[1])
@@ -48,7 +59,16 @@ def add_nodes(graph, nodes):
 
 
 def add_edges(graph, edges):
-    """ Add edge(s) to graph """
+    """Add edge(s) to graph
+
+    Args:
+        graph (Graph): Graph to add edge(s) to
+        edges (list): List of edges
+
+    Returns:
+        Graph: Return the modified graph
+
+    """
     for e in edges:
         if isinstance(e[0], tuple):
             graph.edge(*e[0], **e[1])
@@ -58,7 +78,43 @@ def add_edges(graph, edges):
 
 
 def apply_styles(graph, styles):
-    """ Apply styles to graph """
+    """ Apply styles to graph
+
+    Note:
+        Also have a look at :class:`smalisca.core.GraphConfig`
+
+    Args:
+        graph (Graph): Graph to apply styles to
+        styles (dict): List of styles
+
+    Returns:
+        Graph: Return modified Graph
+
+    Examples:
+
+        # Define styles
+        graph_styles = {
+            'graph': {
+                'rankdir': 'LR',
+                'splines': 'ortho',
+                'bgcolor': 'black'
+            },
+            'nodes': {
+                'shape': 'record',
+                'color': 'orange',
+                'fontcolor': 'orange',
+                'style': 'filled',
+                'fillcolor': '#1c1c1c'
+            },
+            'edges': {
+                'color': 'orange'
+            }
+        }
+
+        # Apply styles
+        apply_styles(myGraph, graph_styles)
+
+    """
     graph.graph_attr.update(
         ('graph' in styles and styles['graph']) or {}
     )
@@ -71,14 +127,24 @@ def apply_styles(graph, styles):
 
 
 class GraphBase(object):
-    """Base graph class"""
+    """Base graph interface"""
 
     def set_engine(self, engine):
-        """Sets graphviz engine (dot, neato, ...)"""
+        """Sets graphviz engine
+
+        Args:
+            engine (str): neato, dot, fdp, etc.
+
+        """
         self.G._engine = engine
 
     def set_format(self, output_format):
-        """Sets graphviz output format"""
+        """Sets graphviz output format
+
+        Args:
+            output_format (str): png, pdf, dot, svg, etc.
+
+        """
         self.G._format = output_format
 
     def write(self, output_format, filename, prog='dot', args=''):
@@ -118,9 +184,16 @@ class GraphBase(object):
             self.G.render(filename=output_path)
 
 
-
 class ClassGraph(GraphBase):
-    """Graphical representation of classes"""
+    """Graphical representation of classes
+
+    Attributes:
+        G (Digraph): Graphviz Graph
+        classes (dict): Collected classes
+        subgraphs (dict): Use unique subgraphs
+        edges (list): List of available edges
+
+    """
 
     def __init__(self):
         self.G = gv.Digraph()
@@ -130,16 +203,13 @@ class ClassGraph(GraphBase):
         self.subgraphs = {}
         self.edges = []
 
-    def set_engine(self, engine):
-        """Sets graphviz engine (dot, neato, ...)"""
-        self.G._engine = engine
-
-    def set_format(self, output_format):
-        """Sets graphviz output format"""
-        self.G._format = output_format
-
     def add_class(self, class_obj):
-        """Add new class object to graph"""
+        """Add new class object to graph
+
+        Args:
+            class_obj (dict): Class dict as obtained directly from the DB
+
+        """
 
         # First add a package node
         if class_obj.class_package not in self.packages:
@@ -203,7 +273,12 @@ class ClassGraph(GraphBase):
             self.subgraphs[class_obj.class_package] = package_graph
 
     def finalize(self):
-        """Finalize graph"""
+        """Finalize graph
+
+        After all classes have been inserted into the graph,
+        generate subgraphs and apply graph styles
+
+        """
 
         # First make subgraphs
         for k in self.subgraphs.keys():
@@ -219,7 +294,16 @@ class ClassGraph(GraphBase):
 
 
 class CallGraph(GraphBase):
-    """Graphical representation of calls"""
+    """Graphical representation of calls
+
+    Attributes:
+        G (Digraph): Graphviz graph
+        packages (dict): Available packages
+        subgraphs (dict): Available subgraphs
+        edges (list): Available edges
+        classes (dict): Available classes
+
+    """
 
     def __init__(self):
         self.G = gv.Digraph()
@@ -231,7 +315,12 @@ class CallGraph(GraphBase):
     def add_class_subgraph(self, class_node):
         """Adds a new subgraph depending on the node
 
-            Return graph
+        Args:
+            class_node (str): Name of the new class node
+
+        Returns:
+            Graph: Returns a sub-graph
+
         """
 
         # Check if node already in graph
@@ -267,7 +356,12 @@ class CallGraph(GraphBase):
         return class_subgraph
 
     def add_call(self, call_obj):
-        """Add new call object to graph"""
+        """Add new call object to graph
+
+        Args:
+            call_obj (dict): Call object as obtained directly from the DB
+
+        """
 
         # From
         from_class_node = call_obj.from_class
@@ -325,7 +419,11 @@ class CallGraph(GraphBase):
             self.edges.append("%s-%s" % (from_method_node, to_method_node))
 
     def finalize(self):
-        """Finalizes graph"""
+        """Finalizes graph
+
+        Make subgraphs and apply graph styles.
+
+        """
 
         # First make subgraphs
         for k in self.classes.keys():
@@ -338,53 +436,3 @@ class CallGraph(GraphBase):
 
         # Apply general graph styles
         apply_styles(self.G, GraphConfig.CallsGraphConfig.graph_styles)
-
-
-class SmaliscaGraph(object):
-    """Graph based interface for representing generated results
-
-       Great tutorial here: http://matthiaseisen.com/articles/graphviz/
-    """
-
-    def __init__(self, appsqlmodel):
-        self.appsqlmodel = appsqlmodel
-        self.db = self.appsqlmodel.get_session()
-        self.G = gv.Digraph(comment="testing")
-        # self.styles = GraphConfig.styles
-
-    def add_nodes(self, graph, nodes):
-        for n in nodes:
-            if isinstance(n, tuple):
-                graph.node(n[0], **n[1])
-            else:
-                graph.node(n)
-
-    def apply_styles(self, graph, styles):
-        graph.graph_attr.update(
-            ('graph' in styles and styles['graph']) or {}
-        )
-        graph.node_attr.update(
-            ('nodes' in styles and styles['nodes']) or {}
-        )
-        graph.edge_attr.update(
-            ('edges' in styles and styles['edges']) or {}
-        )
-
-    def create(self):
-        """Create graph from app SQL model"""
-
-        # Firt get classes
-        classes = self.appsqlmodel.get_classes()
-
-        # Add clusters as classes
-        for c in classes:
-            cluster_graph = gv.Digraph(name=c.class_name)
-
-            # Add methods to subgraph
-            for m in c.methods:
-                self.add_nodes(cluster_graph, [
-                    (str(m.id), {'label': m.method_name})
-                ])
-
-            # Make class graph subgraph
-            self.G.subgraph(cluster_graph)

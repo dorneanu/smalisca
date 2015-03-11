@@ -30,14 +30,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+"""Basic abstract class for analysis functionalities"""
+
 import abc
 
 
 class AnalysisBase(metaclass=abc.ABCMeta):
+    """Basic analysis class
 
-    """Basic analysis class"""
+    Provides abstract methods how to interact with the results.
+    Every inheriting class has to implement these methods.
 
-    """ Search functionalities """
+    """
+
+    # Search functionalities
 
     @abc.abstractmethod
     def search_class(self, args):
@@ -59,7 +65,8 @@ class AnalysisBase(metaclass=abc.ABCMeta):
         """Search for call"""
         pass
 
-    """ Cross-References (xref) """
+    # Cross-References (xref)
+
     @abc.abstractmethod
     def xref_class(self, args):
         """Find xref to class"""

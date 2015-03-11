@@ -30,7 +30,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-"""Analysis module build upon SQLite"""
+"""Implements analysis interface for SQLite"""
 
 from smalisca.analysis.analysis_base import AnalysisBase
 from smalisca.modules.module_sql_models import SmaliClass, SmaliMethod
@@ -65,16 +65,14 @@ class AnalyzerSQLite(AnalysisBase):
 
     """
 
-    def __init__(self, db_session, graph=None):
+    def __init__(self, db_session):
         """Class constructor
 
         Args:
             db_session: A SQLAlchemy DB session instance
-            graph: A SmaliscaGraph instance
 
         """
         self.db = db_session
-        self.graph = graph
 
     def search_class(self, args={}):
         """Searches for classes
@@ -317,9 +315,3 @@ class AnalyzerSQLite(AnalysisBase):
 
         # If no cross results, return old results
         return tmp_res if tmp_res else results
-
-    def xref_class(self, results, xref_type):
-        pass
-
-    def xref_method(self, args):
-        pass

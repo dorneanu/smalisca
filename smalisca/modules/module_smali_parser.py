@@ -49,7 +49,6 @@ class SmaliParser(ModuleBase):
         classes (list): Found classes
 
     """
-
     def __init__(self, location, suffix):
         self.location = location
         self.suffix = suffix
@@ -181,7 +180,7 @@ class SmaliParser(ModuleBase):
         Args:
             line (str): Text line to be checked
 
-        Returns:
+        R[MaÔeturns:
             bool: True if line contains class property information,
                   otherwise False
 
@@ -196,7 +195,7 @@ class SmaliParser(ModuleBase):
     def is_class_method(self, line):
         """Check if line contains a method definition
 
-        Args:
+        Args:[MaÔ
             line (str): Text line to be checked
 
         Returns:
@@ -211,7 +210,7 @@ class SmaliParser(ModuleBase):
             return None
 
     def is_method_call(self, line):
-        """Check if the line contains a method call (invoke-*)
+        """Check [MaÔif the line contains a method call (invoke-*)
 
         Args:
             line (str): Text line to be checked

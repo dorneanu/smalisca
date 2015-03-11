@@ -30,12 +30,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-import cmd
+"""CLI controller for the analyzer"""
 
 import smalisca.core.smalisca_config as config
 from smalisca.core.smalisca_logging import log
 from smalisca.core.smalisca_app import App
-from smalisca.analysis.analysis_base import AnalysisBase
 from smalisca.analysis.analysis_shell import AnalyzerShell
 
 from cement.core import controller
@@ -43,7 +42,16 @@ from cement.core.controller import CementBaseController
 
 
 class AnalyzerController(CementBaseController):
-    """ Controller for analyzing previously parsed Smali files """
+    """ Controller for analyzing previously parsed Smali files
+
+    You can interact with the results in an interactive way or
+    run commands in batch style. Several commands are provided
+    which can:
+
+        * search for data
+        * draw data
+
+    """
 
     class Meta:
         label = 'analyzer'
@@ -53,19 +61,24 @@ class AnalyzerController(CementBaseController):
 
         arguments = config.COMMON_ARGS + [
             (['-i', '--input'],
-                dict(dest="filename", help="Specify results file to read from",
-                required=True)),
+                dict(
+                    dest="filename", help="Specify results file to read from",
+                    required=True)),
             (['-f', '--format'],
-                dict(dest="fileformat", help="Files format",
-                choices=config.ANALYZER_INPUT_CHOICES,
-                required=True)),
+                dict(
+                    dest="fileformat", help="Files format",
+                    choices=config.ANALYZER_INPUT_CHOICES,
+                    required=True)),
             (['-c'],
-                dict(dest="commands_file",
-                help="Read commands from file instead of interactive prompt")),
+                dict(
+                    dest="commands_file",
+                    help="Read commands from file instead of interactive prompt")),
         ]
 
     @controller.expose(hide=True, aliases=['run'])
     def default(self):
+        """Default command"""
+
         if (self.app.pargs.filename) and (self.app.pargs.fileformat):
             # Create new app
             app = App(__name__)
@@ -77,18 +90,14 @@ class AnalyzerController(CementBaseController):
             if self.app.pargs.fileformat == "sqlite":
                 from smalisca.analysis.analysis_sqlite import AnalyzerSQLite
                 from smalisca.modules.module_sql_models import AppSQLModel
-                from smalisca.modules.module_graph import SmaliscaGraph
 
                 # Read SQLite data
                 appSQL = AppSQLModel(self.app.pargs.filename)
                 log.info("Successfully opened SQLite DB")
 
-                # Generate graph
-                graph = SmaliscaGraph(appSQL)
-
                 # Create analysis framework
                 log.info("Creating analyzer framework ...")
-                analysis = AnalyzerSQLite(appSQL.get_session(), graph)
+                analysis = AnalyzerSQLite(appSQL.get_session())
 
             # Where to read commands from?
             if self.app.pargs.commands_file:
@@ -107,5 +116,3 @@ class AnalyzerController(CementBaseController):
                 log.info("Starting new analysis shell")
                 cmd_shell = AnalyzerShell(analysis)
                 cmd_shell.cmdloop()
-
-

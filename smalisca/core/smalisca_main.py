@@ -30,6 +30,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+"""Main smalisca application built on top of Cement"""
+
 import signal
 import sys
 import smalisca.core.smalisca_config as config

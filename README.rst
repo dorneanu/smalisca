@@ -1,6 +1,6 @@
-************************************
-Smalisca - Static Code analysis tool
-************************************
+*****************************************
+Smalisca - Static Code Analysis for Smali
+*****************************************
 
 If you ever have looked at Android applications you know to appreciate
 the ability of analyzing your target at the most advanced level. Dynamic
@@ -108,6 +108,12 @@ Installation
 ============
 
 Refer to the `installation page <http://smalisca.readthedocs.org/en/latest/installation.html>`_.
+Requirements:
+
+* Python (2.x / 3.x)
+* `cement <http://builtoncement.com/`_
+* Graphviz
+* SQLAlchemy
 
 
 How to use it
@@ -124,7 +130,7 @@ First touch
 
 But first let's have a look at the tools main options::
 
-    $ ./smalisca.py --help
+    $ smalisca --help
                                 ___
                                /\_ \    __
       ____    ___ ___      __  \//\ \  /\_\    ____    ___     __
@@ -170,7 +176,7 @@ Parsing
 
 I'll first **parse** some directory for **Smali** files before doing the analysis stuff::
 
-    $ ./smalisca.py parser -l ~/tmp/FakeBanker2/dumped/smali -s java -f sqlite  -o fakebanker.sqlite
+    $ smalisca parser -l ~/tmp/FakeBanker2/dumped/smali -s java -f sqlite  -o fakebanker.sqlite
 
     ...
 
@@ -194,7 +200,7 @@ Analyzing
 Now you're free to do whatever you want with your generated exports. You can inspect the **SQLite DB**
 directly or use *smaliscas* **analysis** features::
 
-    $ ./smalisca.py analyzer -f sqlite -i fakebanker.sqlite
+    $ smalisca analyzer -f sqlite -i fakebanker.sqlite
 
     ...
 
@@ -232,7 +238,7 @@ License
 Credits
 =======
 
-This tool is dedicated to **Lică**. Many thanks go to:
+This tool is dedicated to **Lică**. Many thanks also go to:
 
 * `Stephen McAllister <https://de.linkedin.com/pub/stephen-mcallister/13/843/71a>`_
 

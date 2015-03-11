@@ -30,11 +30,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+"""Global configuration file for smalisca"""
+
 import os
 import sys
 import tempfile
 from pyfiglet import Figlet, figlet_format
 
+# General project information
 PROJECT_NAME = "smalisca"
 PROJECT_DESC = "Static Code Analysis tool for Smali files"
 PROJECT_AUTHOR = "Victor <Cyneox> Dorneanu"
@@ -52,15 +55,6 @@ COMMON_ARGS = [
             help='Change logging level (Default: info)'
         )),
 ]
-
-# Set here regexp
-CFG_REGEXP = {
-    # Control Flow Graph
-    'classes': '^(.*?)\.class\s+(?P<type>.*?)\s+(?P<name>.*?);\\n' +
-               '(.*?)\.super\s+(?P<parent>.*?)\\n',
-    'properties': '[.]field.*?(?P<name>.*?):(?P<type>\W+|.*;?)',
-    'methods': '[.]method\s*(?P<name>.*?)\n(?P<code>.*?)[.]end\s+method'
-}
 
 # JSON settings
 JSON_SETTINGS = {
@@ -220,19 +214,19 @@ class GraphConfig(object):
         # General graph styles
         graph_styles = {
             'graph': {
-                'rankdir':'LR',
-                'splines':'ortho',
-                'bgcolor':'black'
+                'rankdir': 'LR',
+                'splines': 'ortho',
+                'bgcolor': 'black'
             },
             'nodes': {
-                'shape':'record',
-                'color':'orange',
-                'fontcolor':'orange',
+                'shape': 'record',
+                'color': 'orange',
+                'fontcolor': 'orange',
                 'style': 'filled',
                 'fillcolor': '#1c1c1c'
             },
             'edges': {
-                'color':'orange'
+                'color': 'orange'
             }
         }
 
@@ -246,7 +240,7 @@ class GraphConfig(object):
                 'width': '10'
             },
             'edges': {
-                'color':'#3B3131',
+                'color': '#3B3131',
             }
         }
 
@@ -260,28 +254,26 @@ class GraphConfig(object):
             }
         }
 
-
-
     class CallsGraphConfig(object):
         """ Graphviz configuration for calls graph"""
 
         # General graph styles
         graph_styles = {
             'graph': {
-                'rankdir':'LR',
-                'splines':'false',
-                'bgcolor':'black',
-                'color':'yellow',
-                'labeljust':'r',
-                'fontcolor':'orange',
-                'ranksep':'2.8 equally',
-                'nodesep':'.05'
+                'rankdir': 'LR',
+                'splines': 'false',
+                'bgcolor': 'black',
+                'color': 'yellow',
+                'labeljust': 'r',
+                'fontcolor': 'orange',
+                'ranksep': '2.8 equally',
+                'nodesep': '.05'
             },
             'nodes': {
-                'shape':'box3d',
-                'color':'white',
-                'fontcolor':'grey',
-                'width':'7'
+                'shape': 'box3d',
+                'color': 'white',
+                'fontcolor': 'grey',
+                'width': '7'
             },
             'edges': {
                 'color': 'orange',
@@ -292,17 +284,17 @@ class GraphConfig(object):
         # Subgraph (cluster) styles
         cluster_styles = {
             'graph': {
-                'rankdir':'LR',
-                'splines':'false',
-                'labeljust':'r',
+                'rankdir': 'LR',
+                'splines': 'false',
+                'labeljust': 'r',
                 'labelfontsize': '60.5',
-                'color':'#B87333',
+                'color': '#B87333',
             },
             'nodes': {
-                'shape':'Mrecord',
-                'color':'#3F602B',
-                'fontcolor':'orange',
-                'width':'7'
+                'shape': 'Mrecord',
+                'color': '#3F602B',
+                'fontcolor': 'orange',
+                'width': '7'
             },
             'edges': {
                 'color': 'orange',
@@ -327,4 +319,3 @@ class GraphConfig(object):
                 'style': 'solid'
             }
         }
-

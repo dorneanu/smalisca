@@ -48,6 +48,7 @@ from argparse import RawTextHelpFormatter
 def list_type(s):
     return s.split(',')
 
+
 def extract_range(s):
     """ Extract range from string"""
     ranges = s.split(',')
@@ -79,7 +80,7 @@ class AnalyzerShell(cmd.Cmd):
         {'name': 'path'}
     ]
 
-    # Call fields
+    # Call columns
     call_fields = [
         {'name': 'id'},
         {'name': 'from_class'},
@@ -91,8 +92,32 @@ class AnalyzerShell(cmd.Cmd):
         {'name': 'ret'}
     ]
 
+    # Property columns
+    property_fields = [
+        {'name': 'id'},
+        {'name': 'property_name'},
+        {'name': 'property_type'},
+        {'name': 'property_info'},
+        {'name': 'property_class'}
+    ]
+
+    # Method columns
+    method_fields = [
+        {'name': 'id'},
+        {'name': 'method_name'},
+        {'name': 'method_type'},
+        {'name': 'method_args'},
+        {'name': 'method_ret'},
+        {'name': 'method_class'}
+    ]
 
     def __init__(self, analysis):
+        """Initializes a analysis shell
+
+        Args:
+            analysis (AnalsysBase): An implementation of :class:`smalisca.analysis.AnalysisBase`
+
+        """
         self.analysis = analysis
 
         # - Parsers ----------------------------------------------------------
@@ -307,7 +332,12 @@ class AnalyzerShell(cmd.Cmd):
         cmd.Cmd.__init__(self)
 
     def get_classes(self, args):
-        """Returns classes specified by args"""
+        """Returns classes specified by args
+
+        Returns:
+            list: Return list of classes if any, otherwise None
+
+        """
         try:
             results = None
 
@@ -339,7 +369,12 @@ class AnalyzerShell(cmd.Cmd):
             pass
 
     def get_calls(self, args):
-        """Return calls"""
+        """Return calls
+
+        Returns:
+            list: Return list of calls if any, otherwise None
+
+        """
         try:
             results = None
 
@@ -391,7 +426,14 @@ class AnalyzerShell(cmd.Cmd):
             pass
 
     def print_prettytable(self, args, localfields, results):
-        """Prints pretty tables"""
+        """Prints pretty tables
+
+        Args:
+            args (dict): Arguments
+            localfields (dict): Table columns
+            results (list): List of results to pretty print
+
+        """
         # Return results
         if results:
             x = PrettyTable([f['name'] for f in localfields])
@@ -446,15 +488,7 @@ class AnalyzerShell(cmd.Cmd):
 
     def do_sp(self, params):
         """Search for properties. Type 'sp --help' for help."""
-
-        # Table fields
-        t_fields = [
-            {'name': 'id'},
-            {'name': 'property_name'},
-            {'name': 'property_type'},
-            {'name': 'property_info'},
-            {'name': 'property_class'}
-        ]
+        local_fields = self.property_fields
 
         try:
             results = None
@@ -470,7 +504,7 @@ class AnalyzerShell(cmd.Cmd):
 
                 # Search
                 if args.search_pattern:
-                    if any(c['name'] == args.search_type for c in t_fields):
+                    if any(c['name'] == args.search_type for c in property_fields):
                         p = {
                             'type': args.search_type,
                             'pattern': args.search_pattern
@@ -485,27 +519,18 @@ class AnalyzerShell(cmd.Cmd):
 
             # Exclude fields
             if args.exclude_fields:
-                t_fields = [d for d in t_fields
+                local_fields = [d for d in local_fields
                             if d['name'] not in args.exclude_fields]
 
             # Print results
-            self.print_prettytable(args, t_fields, results)
+            self.print_prettytable(args, local_fields, results)
 
         except SystemExit:
             pass
 
     def do_sm(self, params):
         """Search for methods. Type 'sm --help' for help."""
-
-        # Table fields
-        t_fields = [
-            {'name': 'id'},
-            {'name': 'method_name'},
-            {'name': 'method_type'},
-            {'name': 'method_args'},
-            {'name': 'method_ret'},
-            {'name': 'method_class'}
-        ]
+        local_fields = self.method_fields
 
         try:
             results = None
@@ -516,12 +541,12 @@ class AnalyzerShell(cmd.Cmd):
             if args.search_type:
                 # Print available columns
                 if args.search_type == '?':
-                    print([c['name'] for c in t_fields])
+                    print([c['name'] for c in local_fields])
                     return
 
                 # Search
                 if args.search_pattern:
-                    if any(c['name'] == args.search_type for c in t_fields):
+                    if any(c['name'] == args.search_type for c in local_fields):
                         p = {
                             'type': args.search_type,
                             'pattern': args.search_pattern
@@ -536,11 +561,11 @@ class AnalyzerShell(cmd.Cmd):
 
             # Exclude fields
             if args.exclude_fields:
-                t_fields = [d for d in t_fields
+                local_fields = [d for d in local_fields
                             if d['name'] not in args.exclude_fields]
 
             # Print results
-            self.print_prettytable(args, t_fields, results)
+            self.print_prettytable(args, local_fields, results)
 
         except SystemExit:
             pass

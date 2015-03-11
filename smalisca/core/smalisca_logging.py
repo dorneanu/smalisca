@@ -30,13 +30,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-"""This module implements all logging related functionalities"""
+"""Implements all logging related functionalities"""
 
 import smalisca.core.smalisca_config as config
 from cement.ext.ext_logging import LoggingLogHandler
 
 
 class LoggingHandler(LoggingLogHandler):
+    """Default Cement logging handler"""
+
     class Meta:
         """Default logging handler
 

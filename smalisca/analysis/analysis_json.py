@@ -30,24 +30,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+"""Implement analysis interface for JSON"""
+
+from smalisca.analysis.analysis_base import AnalysisBase
+
 
 class AnalyzerJSON(AnalysisBase):
-    """Implement analysis interface for SQLite"""
+    """Implement analysis interface for JSON
+
+    Not available at the moment.
+
+    """
 
     def __init__(self, db_session):
         """Initiate class"""
         self.db = db_session
 
     def search_class(self, args):
-        result = None
-
-        # Search for class
-        if hasattr(args, 'classname'):
-            if args.classname:
-                result = self.db.query('classes').filter('classes.name' == args.classname)
-
-        return result
-
+        pass
 
     def search_property(self, args):
         pass

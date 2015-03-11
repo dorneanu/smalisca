@@ -41,6 +41,17 @@ from smalisca.core.smalisca_logging import log
 class App:
     """Provides information about an application
 
+    An application basically consists of several packages,
+    classes, methods and so on. This class is meant to reflect
+    the inner structure of an analyzed APK.
+
+    You can add classes, methods and properties. In order to
+    be able to analyze your results, you'll have to always
+    have an instance of this class.
+
+    In order to simplify data analysis an instance of class App
+    can be easily exported as JSON.
+
     Attributes:
         name: Name of the application
         location: Location where the APK was dumped
@@ -252,4 +263,5 @@ class App:
             log.error("Couldn't read from %s" % filename)
 
     def __str__(self):
+        """ Return app als string"""
         return self.to_json()

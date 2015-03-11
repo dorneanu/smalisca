@@ -30,6 +30,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+"""CLI controller for parsing files"""
+
 import smalisca.core.smalisca_config as config
 from smalisca.core.smalisca_app import App
 from smalisca.core.smalisca_logging import log
@@ -75,6 +77,8 @@ class ParserController(CementBaseController):
 
     @controller.expose(hide=True, aliases=['run'])
     def default(self):
+        """Default command"""
+
         if self.app.pargs.location and self.app.pargs.suffix:
             self.location = self.app.pargs.location
             self.suffix = self.app.pargs.suffix
@@ -121,7 +125,7 @@ class ParserController(CementBaseController):
                         # Add methods
                         log.info("\tExtract class methods ...")
                         for m in app.get_methods():
-                           appSQL.add_method(m)
+                            appSQL.add_method(m)
 
                         # Add calls
                         log.info("\tExtract calls ...")

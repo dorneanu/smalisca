@@ -1,18 +1,12 @@
-# ToDo
+**********
+TODO
+**********
 
-- Documentation ....................................................... [ tbd]
-    - sphinx
-    - document methods/class to use with help
+* modules/module_smali_parser:
 
-- modules/module_smali_parser:
-    - Parse/Extract const-strings as well ............................. [ tbd]
-    - Consider Windows paths .......................................... [ tbd]
+    * Parse/Extract const-strings as well 
+    * Consider Windows paths 
 
-- analysis
-    - Export results as DOT, PNG, SVG(?) .............................. [ tbd]
-    -
+* analysis
 
-- SQL Models
-    - Implement to_graph() for every table ............................ [ tbd]
-    - Implement pretty output ......................................... [ tbd]
-    - Catch exceptions (duplicates) ................................... [ tbd]
+    * Export results as HTML/D3-Graph

@@ -30,7 +30,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-"""Default CLI controller"""
+"""Default (base) CLI controller"""
 
 import textwrap
 import smalisca.core.smalisca_config as config
@@ -38,6 +38,7 @@ from cement.core import controller
 
 
 class BaseController(controller.CementBaseController):
+    """Cements base controller"""
 
     class Meta:
         label = 'base'
@@ -53,8 +54,10 @@ class BaseController(controller.CementBaseController):
         ]
 
     def help(self):
+        """Prints help message"""
         print(textwrap.dedent(config.HelpMessage.MAIN_BANNER))
 
     @controller.expose(hide=True, aliases=['run'])
     def default(self):
+        """Default command"""
         self.help()
