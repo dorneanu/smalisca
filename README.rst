@@ -111,7 +111,7 @@ Refer to the `installation page <http://smalisca.readthedocs.org/en/latest/insta
 Requirements:
 
 * Python (2.x / 3.x)
-* `cement <http://builtoncement.com/`_
+* `cement <http://builtoncement.com/>`_
 * Graphviz
 * SQLAlchemy
 
@@ -145,7 +145,7 @@ But first let's have a look at the tools main options::
     :: Author:       Victor <Cyneox> Dorneanu
     :: Desc:         Static Code Analysis tool for Smali files
     :: URL:          http://nullsecurity.net, http://{blog,www}.dornea.nu
-    :: Version:      0.1
+    :: Version:      1.0-RC1
     --------------------------------------------------------------------------------
 
     usage: smalisca.py (sub-commands ...) [options ...] {arguments ...}
