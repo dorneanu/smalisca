@@ -5,4 +5,7 @@ __pycache__/
 *.vim-template*
 env
 src/tmp
+build
+dist
+smalisca.egg-info
 **tmp**
