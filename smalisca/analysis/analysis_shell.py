@@ -121,6 +121,16 @@ class AnalyzerShell(cmd.Cmd):
         self.analysis = analysis
 
         # - Parsers ----------------------------------------------------------
+        # - global search
+        self.s_parser = argparse.ArgumentParser(
+            prog='s', add_help=True,
+            description=textwrap.dedent(config.HelpMessage.ANALYZER_HELP_S),
+            formatter_class=RawTextHelpFormatter)
+        self.s_parser.add_argument(
+            '-p', dest='search_pattern', help="Specify search pattern")
+        self.s_parser.add_argument(
+            '-t', dest='table', choices=('class', 'property', 'method'),
+            help="Specify table to lookup in")
 
         # - search classes
         self.sc_parser = argparse.ArgumentParser(
@@ -466,7 +476,62 @@ class AnalyzerShell(cmd.Cmd):
         else:
             print("No results! :(")
 
+    def print_global_search(self, results):
+        # Print classes
+        print("- Classes ---------------------------------------------------------------------")
+        if len(results['classes']) > 0:
+            classes = results['classes']
+            log.info("Found %d results" % len(classes))
+
+            for c in classes:
+                print("%s\n" % c)
+        else:
+            log.warn("No found classes.\n")
+
+        # Print properties
+        print("- Properties ------------------------------------------------------------------")
+        if len(results['properties']) > 0:
+            properties = results['properties']
+            log.info("Found %d results" % len(properties))
+
+            for p in properties:
+                print("%s\n" % p)
+        else:
+            log.warn("No found properties.\n")
+
+        # Print methods
+        print("- Methods ---------------------------------------------------------------------")
+        if len(results['methods']) > 0:
+            methods = results['methods']
+            log.info("Found %d results" % len(methods))
+
+            for m in methods:
+                print("%s\n" % m)
+        else:
+            log.warn("No found methods.\n")
+
+
     # - Search commands ------------------------------------------------------
+    def do_s(self, params):
+        """Global search function. Type 's --help' for help."""
+        try:
+            args = self.s_parser.parse_args(params.split())
+            p = {}
+            if args.search_pattern:
+                p['pattern'] = args.search_pattern
+
+                if args.table:
+                    p['table'] = args.table
+
+                # Get results
+                results = self.analysis.search(p)
+                self.print_global_search(results)
+            else:
+                log.warn("You have to specify a search pattern!")
+
+        except SystemExit:
+            pass
+
     def do_sc(self, params):
         """Search for classes. Type 'sc --help' for help."""
         local_fields = self.class_fields

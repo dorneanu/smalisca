@@ -38,6 +38,8 @@ from smalisca.modules.module_sql_models import SmaliProperty
 from smalisca.modules.module_sql_models import SmaliCall
 from smalisca.core.smalisca_logging import log
 
+from sqlalchemy import or_
+
 
 def row2dict(row):
     """Converts SQLAlchemy row to dict
@@ -73,6 +75,59 @@ class AnalyzerSQLite(AnalysisBase):
 
         """
         self.db = db_session
+
+    def search(self, args={}):
+        """Search globally for a certain pattern
+
+        Args:
+            args (dict): Specify a dict containing the search criterias
+
+        Returns:
+            dict: Returns a dict containing found classes, properties, methods, calls:
+
+            results = {}
+            results = {'classes': found_classes, 'properties': 'found_properties', ... }
+
+        """
+        table = None
+        classes = []
+        properties = []
+        methods = []
+
+        if 'pattern' not in args:
+            log.error("No search pattern")
+
+        if 'table' in args:
+            table = args['table']
+
+
+        if table == 'class':
+            # Search for classes
+            classes = self.search_class_by_pattern(args['pattern'])
+
+        elif table == 'property':
+            # Search for properties
+            properties = self.search_property_by_pattern(args['pattern'])
+
+        elif table == 'method':
+            # Search for methods
+            methods = self.search_method_by_pattern(args['pattern'])
+
+        elif table is None:
+            # Search for all
+            classes = self.search_class_by_pattern(args['pattern'])
+            properties = self.search_property_by_pattern(args['pattern'])
+            methods = self.search_method_by_pattern(args['pattern'])
+
+        else:
+            log.error("Invalid table")
+
+        # Return results
+        return {
+            'classes': classes,
+            'properties': properties,
+            'methods': methods
+        }
 
     def search_class(self, args={}):
         """Searches for classes
@@ -131,6 +186,35 @@ class AnalyzerSQLite(AnalysisBase):
 
         return result
 
+    def search_class_by_pattern(self, pattern):
+        """Searches classes by specific pattern.
+
+        It will search for classes which have specified pattern whether in the
+            * class name
+            * class package
+            * class type
+            * path
+
+        Args:
+            pattern (string): Pattern to lookup for
+
+        Returns:
+            list: Return list of results if any, otherwise None
+
+        """
+        results = None
+        query = self.db.query(SmaliClass)
+        query = query.filter(
+            or_(
+                SmaliClass.class_name.contains(pattern),
+                SmaliClass.class_package.contains(pattern),
+                SmaliClass.class_type.contains(pattern),
+                SmaliClass.path.contains(pattern)
+            )
+        )
+        results = query.all()
+        return results
+
     def search_property(self, args={}):
         """Searches for class properties
 
@@ -182,7 +266,45 @@ class AnalyzerSQLite(AnalysisBase):
 
         return result
 
+    def search_property_by_pattern(self, pattern):
+        """Searches properties by specific pattern.
+
+        It will search for properties which have specified pattern whether in the
+            * property name
+            * property type
+            * property info
+            * property class
+
+        Args:
+            pattern (string): Pattern to lookup for
+
+        Returns:
+            list: Return list of results if any, otherwise None
+
+        """
+        results = None
+        query = self.db.query(SmaliProperty)
+        query = query.filter(
+            or_(
+                SmaliProperty.property_name.contains(pattern),
+                SmaliProperty.property_type.contains(pattern),
+                SmaliProperty.property_info.contains(pattern),
+                SmaliProperty.property_class.contains(pattern)
+                )
+        )
+        results = query.all()
+        return results
+
     def search_method(self, args={}):
+        """Searches for class methods
+
+        Args:
+            args (dict): Specify a dict containing the search criterias
+
+        Returns:
+            list: List of any results, None otherwise.
+
+        """
         result = None
         query = self.db.query(SmaliMethod)
 
@@ -219,6 +341,37 @@ class AnalyzerSQLite(AnalysisBase):
             result = query.all()
 
         return result
+
+    def search_method_by_pattern(self, pattern):
+        """Searches methods by specific pattern.
+
+        It will search for properties which have specified pattern whether in the
+            * method name
+            * method type
+            * method arguments
+            * method return value
+            * method class
+
+        Args:
+            pattern (string): Pattern to lookup for
+
+        Returns:
+            list: Return list of results if any, otherwise None
+
+        """
+        results = None
+        query = self.db.query(SmaliMethod)
+        query = query.filter(
+            or_(
+                SmaliMethod.method_name.contains(pattern),
+                SmaliMethod.method_type.contains(pattern),
+                SmaliMethod.method_ret.contains(pattern),
+                SmaliMethod.method_args.contains(pattern),
+                SmaliMethod.method_class.contains(pattern)
+            )
+        )
+        results = query.all()
+        return results
 
     def search_call(self, args={}):
         result = None

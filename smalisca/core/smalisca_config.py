@@ -92,6 +92,13 @@ class HelpMessage:
     # - Analyzer -------------------------------------------------------------
     ANALYZER_HELP = "[--] Analyze results using an interactive prompt or on the command line."
 
+    # s (global search)
+    ANALYZER_HELP_S = """
+    [--] Search for pattern
+
+    Search available tables for a specific pattern (-p).
+    """
+
     # sc (search classes)
     ANALYZER_HELP_SC = """
     [--] Search for classes
