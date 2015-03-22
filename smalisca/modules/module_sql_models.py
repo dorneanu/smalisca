@@ -32,6 +32,7 @@
 
 """Represent an App as SQL data"""
 
+import textwrap
 import sqlalchemy as sql
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, scoped_session, sessionmaker
@@ -52,7 +53,7 @@ class_properties_table = sql.Table(
     sql.Column('prop_id', sql.Integer, ForeignKey('properties.id'))
 )
 
-# Classes <-> Methodsß[Maß
+# Classes <-> Methods
 class_methods_table = sql.Table(
     'class_methods', Base.metadata,
     sql.Column('class_id', sql.Integer, ForeignKey('classes.id')),
@@ -96,21 +97,18 @@ class SmaliClass(Base):
     methods = relationship(
         'SmaliMethod', secondary=class_methods_table)
 
-    # FIXME: Add prettytable
     def to_string(self):
         s = """
-        --------
-        ID: \t%d
-        Name: \t%s
-        Type: \t%s
-        Depth: \t%s
-        Path: \t%s
-        --------
+        :: ID: %d\n
+        \t[+] Name: \t%s
+        \t[+] Type: \t%s
+        \t[+] Depth: \t%s
+        \t[+] Path: \t%s
         """ % (
             self.id, self.class_name, self.class_type,
             self.depth, self.path
         )
-        return s
+        return textwrap.dedent(s)
 
     def __str__(self):
         return self.to_string()
@@ -150,16 +148,14 @@ class SmaliProperty(Base):
 
     def to_string(self):
         s = """
-        --------
-        ID: \t%d
-        Name: \t%s
-        Type: \t%s
-        Info: \t%s
-        Class: \t%s
-        --------
+        :: ID: %d\n
+        \t[+] Name: \t%s
+        \t[+] Type: \t%s
+        \t[+] Info: \t%s
+        \t[+] Class: \t%s
         """ % (self.id, self.property_name, self.property_type,
                self.property_info, self.property_class)
-        return s
+        return textwrap.dedent(s)
 
     def __str__(self):
         return self.to_string()
@@ -198,20 +194,17 @@ class SmaliMethod(Base):
     method_ret = sql.Column(sql.Text)
     method_class = sql.Column(sql.Text)
 
-    # FIXME: Add prettytable
     def to_string(self):
         s = """
-        --------
-        ID: \t%d
-        Name: \t%s
-        Type: \t%s
-        Args: \t%s
-        Ret: \t%s
-        Class: \t%s
-        --------
+        :: ID: %d\n
+        \t[+] Name: \t%s
+        \t[+] Type: \t%s
+        \t[+] Args: \t%s
+        \t[+] Ret: \t%s
+        \t[+] Class: \t%s
         """ % (self.id, self.method_name, self.method_type,
                self.method_args, self.method_ret, self.method_class)
-        return s
+        return textwrap.dedent(s)
 
     def __str__(self):
         return self.to_string()
