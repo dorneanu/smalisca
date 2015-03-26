@@ -115,6 +115,11 @@ class App:
         else:
             self.classes[classname]['properties'] = []
 
+        if class_obj['const-strings']:
+            self.classes[classname]['const-strings'] = class_obj['const-strings']
+        else:
+            self.classes[classname]['const-strings'] = []
+
     def add_property(self, classname, prop):
         """Adds a property to the application
 
@@ -125,6 +130,17 @@ class App:
         """
         if classname in self.classes:
             self.classes[classname]['properties'].append(prop)
+
+    def add_const_string(self, classname, const_string):
+        """Adds a const-string to the application
+
+        Args:
+            classname (str): The class name the property belongs to
+            const-string (dict): A dict containing const-string info
+
+        """
+        if classname in self.classes:
+            self.classes[classname]['const-strings'].append(const_string)
 
     def add_method(self, classname, method):
         """Adds a method to the application
@@ -174,6 +190,26 @@ class App:
                     'name': p['name'],
                     'type': p['type'],
                     'info': p['info'],
+                    'class': c
+                })
+
+        return data
+
+    def get_const_strings(self):
+        """Return const strings
+
+        Returns:
+            list: List of const strings, otherwise None
+
+        """
+        data = []
+        for c in self.classes.keys():
+            const_strings = self.classes[c]['const-strings']
+
+            for cs in const_strings:
+                data.append({
+                    'name': cs['name'],
+                    'value': cs['value'],
                     'class': c
                 })
 

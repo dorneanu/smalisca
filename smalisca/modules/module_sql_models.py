@@ -53,6 +53,13 @@ class_properties_table = sql.Table(
     sql.Column('prop_id', sql.Integer, ForeignKey('properties.id'))
 )
 
+# Classes <-> Const Strings
+class_const_strings_table = sql.Table(
+    'class_const_strings', Base.metadata,
+    sql.Column('class_id', sql.Integer, ForeignKey('classes.id')),
+    sql.Column('const_string_id', sql.Integer, ForeignKey('const_strings.id'))
+)
+
 # Classes <-> Methods
 class_methods_table = sql.Table(
     'class_methods', Base.metadata,
@@ -94,6 +101,8 @@ class SmaliClass(Base):
     # Relationships
     properties = relationship(
         'SmaliProperty', secondary=class_properties_table)
+    const_strings = relationship(
+        'SmaliConstString', secondary=class_const_strings_table)
     methods = relationship(
         'SmaliMethod', secondary=class_methods_table)
 
@@ -121,7 +130,7 @@ class SmaliProperty(Base):
     """Models a Smali class property
 
     Attributes:
-        id (integer): Primary ke
+        id (integer): Primary key
         property_name (str): Name of the property
         property_type (str): Property type (e.g. Ljava/lang/String)#
         property_info (str): Additional property info (private, static, finale, etc.)
@@ -155,6 +164,40 @@ class SmaliProperty(Base):
         \t[+] Class: \t%s
         """ % (self.id, self.property_name, self.property_type,
                self.property_info, self.property_class)
+        return textwrap.dedent(s)
+
+    def __str__(self):
+        return self.to_string()
+
+    def __unicode__(self):
+        return self.to_string()
+
+
+class SmaliConstString(Base):
+    """Models a Smali const string
+
+    Attributes:
+        id (integer): Primary key
+        const_string_var (str): Name of the variable
+        const_string_value (str): Value of const string
+
+    """
+    __tablename__ = "const_strings"
+
+    # Fields
+    id = sql.Column(sql.Integer, primary_key=True)
+    const_string_var = sql.Column(sql.Text)
+    const_string_value = sql.Column(sql.Text)
+    const_string_class = sql.Column(sql.Text)
+
+    def to_string(self):
+        s = """
+        :: ID: %d\n
+        \t[+] Variable: \t%s
+        \t[+] Value: \t%s
+        \t[+] Class: \t%s
+        """ % (self.id, self.const_string_var, self.const_string_value, self.const_string_class)
+
         return textwrap.dedent(s)
 
     def __str__(self):
@@ -356,6 +399,15 @@ class AppSQLModel:
         """
         return self.db.query(SmaliProperty).all()
 
+    def get_const_strings(self):
+        """Returns all const strings
+
+        Returns:
+            list: Return list of const-string objects
+
+        """
+        return self.db.query(SmaliConstString).all()
+
     def get_methods(self):
         """Return all methods
 
@@ -394,7 +446,7 @@ class AppSQLModel:
         self.classes[class_obj['name']] = new_class
         self.db.merge(new_class)
 
-    def add_propery(self, prop):
+    def add_property(self, prop):
         """Adds property to class
 
         Args:
@@ -419,6 +471,31 @@ class AppSQLModel:
         except sql.exc.IntegrityError:
             self.db.rollback()
             log.error("Found NOT unique values")
+
+    def add_const_string(self, const_string):
+        """Adds const string to class
+
+        Args:
+            prop (dict): Property object to insert
+
+        """
+        class_obj = self.get_class_by_name(const_string['class'])
+        new_const_string = SmaliConstString(
+            const_string_var=const_string['name'],
+            const_string_value=const_string['value'],
+            const_string_class=const_string['class']
+        )
+
+        # Append new const-string to class
+        class_obj.const_strings.append(new_const_string)
+
+        # Add to DB
+        try:
+            self.db.merge(class_obj)
+
+        except:
+            self.db.rollback()
+            log.error("Failed inserting const-string\:%s" % new_const_string)
 
     def add_method(self, method):
         """Adds property to class

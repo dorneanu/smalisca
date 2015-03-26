@@ -96,6 +96,12 @@ class SmaliParser(ModuleBase):
                         p = self.extract_class_property(match_class_property)
                         current_class['properties'].append(p)
 
+                elif 'const-string' in l:
+                    match_const_string = self.is_const_string(l)
+                    if match_const_string:
+                        c = self.extract_const_string(match_const_string)
+                        current_class['const-strings'].append(c)
+
                 elif '.method' in l:
                     match_class_method = self.is_class_method(l)
                     if match_class_method:
@@ -180,7 +186,7 @@ class SmaliParser(ModuleBase):
         Args:
             line (str): Text line to be checked
 
-        R[MaÔeturns:
+        Returns:
             bool: True if line contains class property information,
                   otherwise False
 
@@ -192,10 +198,28 @@ class SmaliParser(ModuleBase):
         else:
             return None
 
+    def is_const_string(self, line):
+        """Check if line contains a const-string
+
+        Args:
+            line (str): Text line to be checked
+
+        Returns:
+            bool: True if line contains const-string information,
+                  otherwise False
+
+        """
+        match = re.search("const-string\s+(?P<const>.*)", line)
+        if match:
+            log.debug("\t\tFound const-string: %s" % match.group('const'))
+            return match.group('const')
+        else:
+            return None
+
     def is_class_method(self, line):
         """Check if line contains a method definition
 
-        Args:[MaÔ
+        Args:
             line (str): Text line to be checked
 
         Returns:
@@ -257,6 +281,9 @@ class SmaliParser(ModuleBase):
             # Properties
             'properties': [],
 
+            # Const strings
+            'const-strings': [],
+
             # Methods
             'methods': []
         }
@@ -291,6 +318,34 @@ class SmaliParser(ModuleBase):
         }
 
         return p
+
+    def extract_const_string(self, data):
+        """Extract const string info
+
+        Args:
+            data (str): Data would be sth like: v0, "this is a string"
+
+        Returns:
+            dict: Returns a property object, otherwise None
+
+        """
+        match = re.search('(?P<var>.*),\s+"(?P<value>.*)"', data)
+
+        if match:
+            # A const string is usually saved in this form
+            #  <variable name>,<value>
+
+            c = {
+                # Variable
+                'name': match.group('var'),
+
+                # Value of string
+                'value': match.group('value')
+            }
+
+            return c
+        else:
+            return None
 
     def extract_class_method(self, data):
         """Extract class method info
