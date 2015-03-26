@@ -149,6 +149,20 @@ class HelpMessage:
         sp -c property_type -p test2 -x depth,id,class_name
     """
 
+    # scs (search const strings)
+    ANALYZER_HELP_SCS = """
+    [--] Search for const strings
+
+    Specify by '-c' in which column you'd like to search for a pattern (specified by '-p').
+    Examples:
+
+    a) List available columns
+        scs -c ?
+
+    b) Search for pattern "test" in column "const_string_var"
+        scs -c const_string_var -p test
+    """
+
     # sm (search methods)
     ANALYZER_HELP_SM = """
     >> Search for methods

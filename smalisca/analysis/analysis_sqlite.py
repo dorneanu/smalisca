@@ -35,6 +35,7 @@
 from smalisca.analysis.analysis_base import AnalysisBase
 from smalisca.modules.module_sql_models import SmaliClass, SmaliMethod
 from smalisca.modules.module_sql_models import SmaliProperty
+from smalisca.modules.module_sql_models import SmaliConstString
 from smalisca.modules.module_sql_models import SmaliCall
 from smalisca.core.smalisca_logging import log
 
@@ -92,6 +93,7 @@ class AnalyzerSQLite(AnalysisBase):
         table = None
         classes = []
         properties = []
+        consts = []
         methods = []
 
         if 'pattern' not in args:
@@ -109,6 +111,10 @@ class AnalyzerSQLite(AnalysisBase):
             # Search for properties
             properties = self.search_property_by_pattern(args['pattern'])
 
+        elif table == 'const':
+            # Search for const strings
+            consts = self.search_const_string_by_pattern(args['pattern'])
+
         elif table == 'method':
             # Search for methods
             methods = self.search_method_by_pattern(args['pattern'])
@@ -117,6 +123,7 @@ class AnalyzerSQLite(AnalysisBase):
             # Search for all
             classes = self.search_class_by_pattern(args['pattern'])
             properties = self.search_property_by_pattern(args['pattern'])
+            consts = self.search_const_string_by_pattern(args['pattern'])
             methods = self.search_method_by_pattern(args['pattern'])
 
         else:
@@ -126,6 +133,7 @@ class AnalyzerSQLite(AnalysisBase):
         return {
             'classes': classes,
             'properties': properties,
+            'consts': consts,
             'methods': methods
         }
 
@@ -290,6 +298,80 @@ class AnalyzerSQLite(AnalysisBase):
                 SmaliProperty.property_type.contains(pattern),
                 SmaliProperty.property_info.contains(pattern),
                 SmaliProperty.property_class.contains(pattern)
+                )
+        )
+        results = query.all()
+        return results
+
+    def search_const_string(self, args={}):
+        """Searches for const strings
+
+        Args:
+            args (dict): Specify a dict containing the search criterias
+
+        Returns:
+            list: List of any results, None otherwise.
+
+        """
+        result = None
+        query = self.db.query(SmaliConstString)
+
+        # Search for const strings
+        if ('type' in args) and ('pattern' in args):
+
+            # Search for id
+            if args['type'] == 'id':
+                result = query.filter(
+                    SmaliConstString.id == int(args['pattern'])
+                ).all()
+
+            # Search for variable name
+            elif args['type'] == 'const_string_var':
+                result = query.filter(
+                    SmaliConstString.const_string_var.contains(args['pattern'])
+                ).all()
+
+            # Search for value
+            elif args['type'] == 'const_string_value':
+                result = query.filter(
+                    SmaliConstString.const_string_value.contains(args['pattern'])
+                ).all()
+
+            # Search for class
+            elif args['type'] == 'const_string_class':
+                result = query.filter(
+                    SmaliConstString.const_string_class.contains(args['pattern'])
+                ).all()
+
+            else:
+                log.error("Invalid search type: %s" % args['type'])
+        else:
+            result = query.all()
+
+        return result
+
+    def search_const_string_by_pattern(self, pattern):
+        """Searches const strings by specific pattern.
+
+        It will search for const strings which have specified pattern whether in the
+            * variable name
+            * string value
+            * class
+
+        Args:
+            pattern (string): Pattern to lookup for
+
+        Returns:
+            list: Return list of results if any, otherwise None
+
+        """
+        results = None
+        query = self.db.query(SmaliConstString)
+        query = query.filter(
+            or_(
+                SmaliConstString.const_string_var.contains(pattern),
+                SmaliConstString.const_string_value.contains(pattern),
+                SmaliConstString.const_string_class.contains(pattern)
                 )
         )
         results = query.all()

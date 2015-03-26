@@ -120,7 +120,12 @@ class ParserController(CementBaseController):
                         # Add properties
                         log.info("\tExtract class properties ...")
                         for p in app.get_properties():
-                            appSQL.add_propery(p)
+                            appSQL.add_property(p)
+
+                        # Add const-strings
+                        log.info("\tExtract class const-strings ...")
+                        for c in app.get_const_strings():
+                            appSQL.add_const_string(c)
 
                         # Add methods
                         log.info("\tExtract class methods ...")

@@ -101,6 +101,14 @@ class AnalyzerShell(cmd.Cmd):
         {'name': 'property_class'}
     ]
 
+    # Const strings fields
+    const_string_fields = [
+        {'name': 'id'},
+        {'name': 'const_string_var'},
+        {'name': 'const_string_value'},
+        {'name': 'const_string_class'}
+    ]
+
     # Method columns
     method_fields = [
         {'name': 'id'},
@@ -129,7 +137,7 @@ class AnalyzerShell(cmd.Cmd):
         self.s_parser.add_argument(
             '-p', dest='search_pattern', help="Specify search pattern")
         self.s_parser.add_argument(
-            '-t', dest='table', choices=('class', 'property', 'method'),
+            '-t', dest='table', choices=('class', 'property', 'const', 'method'),
             help="Specify table to lookup in")
 
         # - search classes
@@ -198,6 +206,26 @@ class AnalyzerShell(cmd.Cmd):
         self.sp_parser.add_argument(
             '-x', dest='exclude_fields', help="Exclude table fields",
             type=list_type)
+
+        # const strings
+        self.scs_parser = argparse.ArgumentParser(
+            prog='scs', add_help=True,
+            description=textwrap.dedent(config.HelpMessage.ANALYZER_HELP_SCS),
+            formatter_class=RawTextHelpFormatter)
+
+        self.scs_parser.add_argument(
+            '-c', dest='search_type', help="Specify column.\nType ? for list")
+        self.scs_parser.add_argument(
+            '-p', dest='search_pattern', help="Specify search pattern")
+        self.scs_parser.add_argument(
+            '-s', dest='sortby', help="Sort by column name")
+        self.scs_parser.add_argument(
+            '--reverse', action='store_true', dest='sortby_reverse',
+            help="Reverse sort order")
+        self.scs_parser.add_argument(
+            '-r', dest='range', help="Specify output range by single integer or separated by ','")
+        self.scs_parser.add_argument(
+            '--max-width', dest='max_width', type=int, help="Global column max width")
 
         # methods
         self.sm_parser = argparse.ArgumentParser(
@@ -499,6 +527,17 @@ class AnalyzerShell(cmd.Cmd):
         else:
             log.warn("No found properties.\n")
 
+        # Print const strings
+        print("- Const strings ---------------------------------------------------------------")
+        if len(results['consts']) > 0:
+            const_strings = results['consts']
+            log.info("Found %d results" % len(const_strings))
+
+            for s in const_strings:
+                print("%s\n" % s)
+        else:
+            log.warn("No found const strings.\n")
+
         # Print methods
         print("- Methods ---------------------------------------------------------------------")
         if len(results['methods']) > 0:
@@ -593,6 +632,43 @@ class AnalyzerShell(cmd.Cmd):
         except SystemExit:
             pass
 
+    def do_scs(self, params):
+        """Search for const strings. Type 'scs --help' for help."""
+        local_fields = self.const_string_fields
+
+        try:
+            results = None
+
+            # Parse arguments
+            args = self.scs_parser.parse_args(params.split())
+
+            if args.search_type:
+                # Print available columns
+                if args.search_type == '?':
+                    print([c['name'] for c in local_fields])
+                    return
+
+                # Search
+                if args.search_pattern:
+                    if any(c['name'] == args.search_type for c in local_fields):
+                        p = {
+                            'type': args.search_type,
+                            'pattern': args.search_pattern
+                        }
+                        results = self.analysis.search_const_string(p)
+                    else:
+                        log.error("No such column! Type '-c ?' for a list of available columns.")
+                else:
+                    log.error("No pattern (-p) specified")
+            else:
+                results = self.analysis.search_const_string()
+
+            # Print results
+            self.print_prettytable(args, local_fields, results)
+
+        except SystemExit:
+            pass
+
     def do_sm(self, params):
         """Search for methods. Type 'sm --help' for help."""
         local_fields = self.method_fields
@@ -673,7 +749,7 @@ class AnalyzerShell(cmd.Cmd):
                 if args.direction == 'to':
                     calls_args.to_class = args.class_name
                 elif args.direction == 'from':
-                    calls_args.from_class = args['class_name']
+                    calls_args.from_class = args.class_name
 
             if args.method_name:
                 if args.direction == 'to':
