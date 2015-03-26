@@ -60,4 +60,4 @@ class BaseController(controller.CementBaseController):
     @controller.expose(hide=True, aliases=['run'])
     def default(self):
         """Default command"""
-        self.help()
+        print("Type '--help' for additional info")
