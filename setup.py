@@ -30,16 +30,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+import io
+import smalisca
 from setuptools import setup, find_packages
+
+
+def read(*filenames, **kwargs):
+    encoding = kwargs.get('encoding', 'utf-8')
+    sep = kwargs.get('sep', '\n')
+    buf = []
+    for filename in filenames:
+        with io.open(filename, encoding=encoding) as f:
+            buf.append(f.read())
+    return sep.join(buf)
+
+long_description = read('README.rst', 'CHANGELOG.rst')
 
 setup(
     name='smalisca',
-    version='1.0-rc1',
+    version=smalisca.__version__,
     description='Static code analysis tool for Smali files',
-    long_description=open('README.rst').read(),
+    long_description=long_description,
     url='http://github.com/dorneanu/smalisca',
     author='Victor Dorneanu',
-    author_email='cyneox@nullsecurity.net',
+    author_email='no-spam@dornea.nu',
     keywords='cli smali sca',
     license='MIT',
     packages=find_packages(exclude="bin"),
@@ -49,6 +63,15 @@ setup(
         'sqlalchemy',
         'pyfiglet',
         'prettytable'
+    ],
+    classifiers=[
+        'Programming Language :: Python',
+        'Natural Language :: English',
+        'Topic :: Security',
+        'Topic :: Software Development :: Libraries :: Java Libraries',
+        'Operating System :: OS Independent',
+        'License :: OSI Approved :: MIT License'
+
     ],
     scripts=['bin/smalisca'],
 )

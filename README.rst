@@ -244,6 +244,10 @@ This tool is dedicated to **Lică**. Many thanks also go to:
 
     * Many thanks for all those hours full of APK debugging and great ideas
 
+* My gf
+
+    * Thank you very much for your patience and understanding!
+
 * `nullsecurity.net <http://nullsecurity.net>`_
 
     * Hack the planet!

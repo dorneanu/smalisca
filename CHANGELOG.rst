@@ -2,6 +2,28 @@
 Changelog
 **********
 
+1.0 (xxx-yy-zz)
+===============
+
+* General
+   
+    * Minor bugs
+    * Small changes related to versioning
+
+* Parser
+    
+    * Parse for const string (const-string) as well
+
+* Analyzer
+
+    * Added analyzer command (scs) for const strings
+    * Added global search
+    * Search for pattern(s) in tables
+
+* Added Makefile
+
+    * Use make {install, uninstall, clean}
+
 
 1.0-RC1 (2015-03-11)
 ====================
