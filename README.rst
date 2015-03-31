@@ -101,6 +101,21 @@ At the moment there are some few major functionalities like:
 Screenshots
 ===========
 
+.. figure:: http://smalisca.readthedocs.org/en/latest/_images/smalisca_search_classes.png
+   :scale: 99%
+   :alt: Basic usage
+   
+   Output results as table.
+   
+
+
+.. figure:: http://smalisca.readthedocs.org/en/latest/_images/smalisca_dxcl_dot_0.png
+   :scale: 99%
+   :alt: Cross calls
+   
+   Basic relationships between classes and modules.
+
+
 Have a look at the `screenshots page <http://smalisca.readthedocs.org/en/latest/screenshots.html>`_.
 
 
