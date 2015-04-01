@@ -1,6 +1,6 @@
-*****************************************
+=========================================
 Static Code Analysis for Smali
-*****************************************
+=========================================
 
 If you ever have looked at Android applications you know to appreciate
 the ability of analyzing your target at the most advanced level. Dynamic
@@ -266,5 +266,3 @@ This tool is dedicated to **Lică**. Many thanks also go to:
 * `nullsecurity.net <http://nullsecurity.net>`_
 
     * Hack the planet!
-
-

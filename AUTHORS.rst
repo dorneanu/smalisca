@@ -1,6 +1,6 @@
-*************
+=============
 AUTHORS
-*************
+=============
 
 * **Victor Dorneanu** (lead developer)
     + Twitter: `@victordorneanu <http://twitter.com/victordorneanu>`_

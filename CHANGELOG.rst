@@ -1,9 +1,10 @@
-**********
+===========
 Changelog
-**********
+===========
 
-1.0 (2015-04-01)
-===============
+
+0.1 (2015-04-01)
+================
 
 * General
    
@@ -26,7 +27,7 @@ Changelog
     * Use make {install, uninstall, clean}
 
 
-1.0-RC1 (2015-03-11)
+0.1-RC1 (2015-03-11)
 ====================
 
 * Implemented basic project structure 
