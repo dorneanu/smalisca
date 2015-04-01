@@ -35,13 +35,14 @@
 import os
 import sys
 import tempfile
+import smalisca
 from pyfiglet import Figlet, figlet_format
 
 # General project information
 PROJECT_NAME = "smalisca"
 PROJECT_DESC = "Static Code Analysis tool for Smali files"
 PROJECT_AUTHOR = "Victor <Cyneox> Dorneanu"
-PROJECT_VERSION = "1.0-RC1"
+PROJECT_VERSION = smalisca.__version__
 PROJECT_BANNER = PROJECT_NAME + " " + PROJECT_VERSION + "-" + PROJECT_DESC
 PROJECT_URL = "http://nullsecurity.net, http://{blog,www}.dornea.nu"
 PROJECT_MAIL = "tbd"
