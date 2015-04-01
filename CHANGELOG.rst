@@ -2,13 +2,14 @@
 Changelog
 **********
 
-1.0 (xxx-yy-zz)
+1.0 (2015-04-01)
 ===============
 
 * General
    
     * Minor bugs
     * Small changes related to versioning
+    * Create PyPI package
 
 * Parser
     
