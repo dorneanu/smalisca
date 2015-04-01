@@ -31,8 +31,18 @@
 # IN THE SOFTWARE.
 
 import io
-import smalisca
+import os
 from setuptools import setup, find_packages
+
+# Local directory
+here = os.path.dirname(os.path.abspath(__file__))
+
+# Version
+version_file = open(os.path.join(here, 'smalisca', 'VERSION'))
+version = version_file.read().strip()
+
+# GitHub download url
+github_url = "https://github.com/dorneanu/smalisca/archive/{0}.tar.gz".format(version)
 
 
 def read(*filenames, **kwargs):
@@ -40,20 +50,22 @@ def read(*filenames, **kwargs):
     sep = kwargs.get('sep', '\n')
     buf = []
     for filename in filenames:
-        with io.open(filename, encoding=encoding) as f:
+        with io.open(os.path.join(here, filename), encoding=encoding) as f:
             buf.append(f.read())
     return sep.join(buf)
 
+# Get long description
 long_description = read('README.rst', 'CHANGELOG.rst')
 
 setup(
     name='smalisca',
-    version=smalisca.__version__,
+    version=version,
     description='Static code analysis tool for Smali files',
     long_description=long_description,
     url='http://github.com/dorneanu/smalisca',
+    download_url=github_url,
     author='Victor Dorneanu',
-    author_email='no-spam@dornea.nu',
+    author_email='info@dornea.nu',
     keywords='cli smali sca',
     license='MIT',
     packages=find_packages(exclude="bin"),
@@ -71,7 +83,6 @@ setup(
         'Topic :: Software Development :: Libraries :: Java Libraries',
         'Operating System :: OS Independent',
         'License :: OSI Approved :: MIT License'
-
     ],
     scripts=['bin/smalisca'],
 )
