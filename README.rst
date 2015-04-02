@@ -2,6 +2,13 @@
 Static Code Analysis for Smali
 =========================================
 
+.. image:: https://img.shields.io/pypi/dm/smalisca.svg?style=plastic 
+        :target: https://pypi.python.org/pypi/smalisca
+.. image:: https://img.shields.io/pypi/v/smalisca.svg?style=plastic   
+        :target: https://pypi.python.org/pypi/smalisca
+.. image:: https://img.shields.io/pypi/l/smalisca.svg?style=plastic   
+        :target: https://pypi.python.org/pypi/smalisca
+
 If you ever have looked at Android applications you know to appreciate
 the ability of analyzing your target at the most advanced level. Dynamic
 programm analysis will give you a pretty good overview of your applications
@@ -160,7 +167,7 @@ But first let's have a look at the tools main options::
     :: Author:       Victor <Cyneox> Dorneanu
     :: Desc:         Static Code Analysis tool for Smali files
     :: URL:          http://nullsecurity.net, http://{blog,www}.dornea.nu
-    :: Version:      1.0
+    :: Version:      0.1
     --------------------------------------------------------------------------------
 
     usage: smalisca.py (sub-commands ...) [options ...] {arguments ...}
