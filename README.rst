@@ -11,7 +11,7 @@ Static Code Analysis for Smali
 
 If you ever have looked at Android applications you know to appreciate
 the ability of analyzing your target at the most advanced level. Dynamic
-programm analysis will give you a pretty good overview of your applications
+program analysis will give you a pretty good overview of your applications
 activities and general behaviour. However sometimes you'll want to just
 analyze your application **without** running it. You'll want to have a look
 at its components, analyze how they interact and how data is tainted
