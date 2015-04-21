@@ -172,16 +172,19 @@ class GraphBase(object):
 
         if output_format == 'dot':
             self.G.save(filename=filename)
-        else:
-            output_dir, output_filename = os.path.split(filename)
-            output_filename = os.path.splitext(os.path.basename(output_filename))[0]
-            output_path = output_dir + "/" + output_filename
 
+        else:
+            # Render graphviz source code
             self.set_format(output_format)
             self.set_engine(prog)
 
-            # Render graphviz source code
-            self.G.render(filename=output_path)
+            if os.path.isabs(filename):
+                output_dir, output_filename = os.path.split(filename)
+                output_filename = os.path.splitext(os.path.basename(output_filename))[0]
+                output_path = output_dir + "/" + output_filename
+                self.G.render(filename=output_path)
+            else:
+                self.G.render(filename=filename)
 
 
 class ClassGraph(GraphBase):
