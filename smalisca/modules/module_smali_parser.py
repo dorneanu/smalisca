@@ -129,8 +129,6 @@ class SmaliParser(ModuleBase):
 
     def parse_location(self):
         """Parse files in specified location"""
-        log.info("Parsing .%s files in %s ... " % (self.suffix, self.location))
-
         for root, dirs, files in os.walk(self.location):
             for f in files:
                 if f.endswith(self.suffix):
@@ -143,8 +141,6 @@ class SmaliParser(ModuleBase):
                     # Parse file
                     log.debug("Parsing file:\t %s" % f)
                     self.parse_file(file_path)
-
-        log.info("Finished parsing!")
 
     def is_class(self, line):
         """Check if line contains a class definition
