@@ -32,14 +32,11 @@
 
 """Global configuration file for smalisca"""
 
-import os
-import sys
-import tempfile
 import smalisca
 import codecs
 import configparser
 import json
-from pyfiglet import Figlet, figlet_format
+from pyfiglet import Figlet
 
 # General project information
 PROJECT_NAME = "smalisca"
@@ -264,140 +261,6 @@ class Config(object):
     def get_options(self):
         """Gets available options"""
         return self.options
-
-    def testing(self):
-        """
-        for section_name in self.parser.sections():
-            print('Section: %s' % section_name)
-            print('Options: %s' % self.parser.options(section_name))
-
-            for name, value in self.parser.items(section_name):
-                print('  %s = %s' % (name, value))
-        """
-
-        # Testing
-        print("%s" % self.parser['graph-calls']['graph_styles'])
-
-
-class GraphConfig(object):
-    """ Graph settings
-
-        Have a look at http://www.graphviz.org/doc/info/attrs.html
-        for full documentation.
-    """
-
-    class ClassGraphConfig(object):
-        """ Graphviz configuration for class graphs"""
-
-        # General graph styles
-        graph_styles = {
-            'graph': {
-                'rankdir': 'LR',
-                'splines': 'ortho',
-                'bgcolor': 'black'
-            },
-            'nodes': {
-                'shape': 'record',
-                'color': 'orange',
-                'fontcolor': 'orange',
-                'style': 'filled',
-                'fillcolor': '#1c1c1c'
-            },
-            'edges': {
-                'color': 'orange'
-            }
-        }
-
-        # Subgraph (cluster) styles
-        cluster_styles = {
-            'graph': {},
-            'nodes': {
-                'shape': 'note',
-                'color': '#1e1e1e',
-                'fontcolor': 'white',
-                'width': '10'
-            },
-            'edges': {
-                'color': '#3B3131',
-            }
-        }
-
-        # Class node attributes
-        class_nodes = {
-            'nodes': {
-                'color': 'orange',
-                'fontcolor': 'grey',
-                'style': 'rounded',
-                'shape': 'note'
-            }
-        }
-
-    class CallsGraphConfig(object):
-        """ Graphviz configuration for calls graph"""
-
-        # General graph styles
-        graph_styles = {
-            'graph': {
-                'rankdir': 'LR',
-                'splines': 'false',
-                'bgcolor': 'black',
-                'color': 'yellow',
-                'labeljust': 'r',
-                'fontcolor': 'orange',
-                'ranksep': '2.8 equally',
-                'nodesep': '.05'
-            },
-            'nodes': {
-                'shape': 'box3d',
-                'color': 'white',
-                'fontcolor': 'grey',
-                'width': '7'
-            },
-            'edges': {
-                'color': 'orange',
-                'style': 'invis'
-            },
-        }
-
-        # Subgraph (cluster) styles
-        cluster_styles = {
-            'graph': {
-                'rankdir': 'LR',
-                'splines': 'false',
-                'labeljust': 'r',
-                'labelfontsize': '60.5',
-                'color': '#B87333',
-            },
-            'nodes': {
-                'shape': 'Mrecord',
-                'color': '#3F602B',
-                'fontcolor': 'orange',
-                'width': '7'
-            },
-            'edges': {
-                'color': 'orange',
-                'style': 'invis'
-            },
-        }
-
-        # Method nodes styles
-        method_nodes = {
-            'nodes': {
-                'color': '#1c1c1c',
-                'style': 'filled',
-                'shape': 'box',
-                'fontcolor': 'orange'
-            }
-        }
-
-        # Method edges styles
-        method_edges = {
-            'edges': {
-                'color': '#3B3131',
-                'style': 'solid'
-            }
-        }
-
 
 # Global config options
 smalisca_conf = Config()
