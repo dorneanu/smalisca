@@ -37,9 +37,6 @@ import graphviz as gv
 from smalisca.core.smalisca_config import smalisca_conf
 from smalisca.core.smalisca_logging import log
 
-# Several optiosn from some config file
-smalisca_opts = smalisca_conf.get_options()
-
 
 # Useful functions found on http://matthiaseisen.com/articles/graphviz/
 def add_nodes(graph, nodes):
@@ -208,6 +205,7 @@ class ClassGraph(GraphBase):
         self.classes = {}
         self.subgraphs = {}
         self.edges = []
+        self.graphviz_opts = smalisca_conf.options['graphviz']
 
     def add_class(self, class_obj):
         """Add new class object to graph
@@ -263,8 +261,8 @@ class ClassGraph(GraphBase):
         node_attr = {'label': class_label}
 
         # Add methode node attributes
-        for k in smalisca_opts['graph-classes']['class_nodes']['nodes'].keys():
-            node_attr[k] = smalisca_opts['graph-classes']['class_nodes']['nodes'][k]
+        for k in self.graphviz_opts['classes']['class_nodes']['nodes'].keys():
+            node_attr[k] = self.graphviz_opts['classes']['class_nodes']['nodes'][k]
 
         add_nodes(package_graph, [(class_node, node_attr)])
 
@@ -289,13 +287,13 @@ class ClassGraph(GraphBase):
         # First make subgraphs
         for k in self.subgraphs.keys():
             # Add styles
-            apply_styles(self.subgraphs[k], smalisca_opts['graph-class']['cluster_styles'])
+            apply_styles(self.subgraphs[k], self.graphviz_opts['classes']['cluster_styles'])
 
             # Make subgraph
             self.G.subgraph(self.subgraphs[k])
 
         # Add global graph styles
-        apply_styles(self.G, smalisca_opts['graph-class']['graph_styles'])
+        apply_styles(self.G, self.graphviz_opts['classes']['graph_styles'])
 
 
 class CallGraph(GraphBase):
@@ -316,6 +314,7 @@ class CallGraph(GraphBase):
         self.subgraphs = {}
         self.edges = []
         self.classes = {}
+        self.graphviz_opts = smalisca_conf.options['graphviz']
 
     def add_class_subgraph(self, class_node):
         """Adds a new subgraph depending on the node
@@ -385,8 +384,8 @@ class CallGraph(GraphBase):
             method_node_attr = {'label': "[M] %s\l" % call_obj.from_method}
 
             # Add additional methode node attributes
-            for k in smalisca_opts['graph-calls']['method_nodes']['nodes'].keys():
-                method_node_attr[k] = smalisca_opts['graph-calls']['method_nodes']['nodes'][k]
+            for k in self.graphviz_opts['calls']['method_nodes']['nodes'].keys():
+                method_node_attr[k] = self.graphviz_opts['calls']['method_nodes']['nodes'][k]
 
             # Add node
             add_nodes(from_subgraph, [(
@@ -400,8 +399,8 @@ class CallGraph(GraphBase):
             method_node_attr = {'label': "[M] %s\l" % call_obj.dst_method}
 
             # Add methode node attributes
-            for k in smalisca_opts['graph-calls']['method_nodes']['nodes'].keys():
-                method_node_attr[k] = smalisca_opts['graph-calls']['method_nodes']['nodes'][k]
+            for k in self.graphviz_opts['calls']['method_nodes']['nodes'].keys():
+                method_node_attr[k] = self.graphviz_opts['calls']['method_nodes']['nodes'][k]
 
             # Add node
             add_nodes(to_subgraph, [(
@@ -414,8 +413,8 @@ class CallGraph(GraphBase):
             edge_attr = {}
 
             # Add edge attributes
-            for k in smalisca_opts['graph-calls']['method_edges']['edges'].keys():
-                edge_attr[k] = smalisca_opts['graph-calls']['method_edges']['edges'][k]
+            for k in self.graphviz_opts['calls']['method_edges']['edges'].keys():
+                edge_attr[k] = self.graphviz_opts['calls']['method_edges']['edges'][k]
 
             # Add edge
             add_edges(self.G, [
@@ -434,10 +433,10 @@ class CallGraph(GraphBase):
         for k in self.classes.keys():
 
             # Apply styles
-            apply_styles(self.classes[k]['graph'], smalisca_opts['graph-calls']['cluster_styles'])
+            apply_styles(self.classes[k]['graph'], self.graphviz_opts['calls']['cluster_styles'])
 
             # Make subgraph
             self.G.subgraph(self.classes[k]['graph'])
 
         # Apply general graph styles
-        apply_styles(self.G, smalisca_opts['graph-calls']['graph_styles'])
+        apply_styles(self.G, self.graphviz_opts['calls']['graph_styles'])

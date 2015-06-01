@@ -44,7 +44,7 @@ PROJECT_DESC = "Static Code Analysis tool for Smali files"
 PROJECT_AUTHOR = "Victor <Cyneox> Dorneanu"
 PROJECT_VERSION = smalisca.__version__
 PROJECT_BANNER = PROJECT_NAME + " " + PROJECT_VERSION + "-" + PROJECT_DESC
-PROJECT_URL = "http://nullsecurity.net, http://{blog,www}È.dornea.nu"
+PROJECT_URL = "http://nullsecurity.net, http://{blog,www}.dornea.nu"
 PROJECT_MAIL = "info AEEET dornea DOT nu"
 PROJECT_CONF = "smalisca/data/config/config.conf"
 
@@ -227,40 +227,40 @@ class HelpMessage:
 class Config(object):
     """ Configuration
 
-        FIXME: TBD
+        Maintains basic configuration like Graphviz options stuff.
+
+        Attributes:
+            sections: Available sections
+            options: Parsed options
     """
 
     # Specify sections to be expected
     sections = {
-        'graph-classes': ['graph_styles', 'cluster_styles', 'class_nodes'],
-        'graph-calls': ['graph_styles', 'cluster_styles', 'method_nodes', 'method_edges']
+        'graphviz': ['classes', 'calls']
     }
-
-    options = {}
 
     def __init__(self):
         self.parser = configparser.SafeConfigParser(allow_no_value=True)
-        pass
+        self.options = {}
 
     def read(self, filename):
         """Read config from file"""
         with codecs.open(filename, 'r', encoding='utf-8') as f:
             self.parser.readfp(f)
+            f.close()
 
     def parse(self):
         """Create dicts from config variables"""
         # Run through sections and check for options
+        opts = {}
         for s in self.sections:
             if self.parser.has_section(s):
-                self.options[s] = dict()
+                opts[s] = {}
                 for o in self.sections[s]:
                     if self.parser.has_option(s, o):
                         # Create JSON from string
-                        self.options[s][o] = json.loads(self.parser[s][o])
-
-    def get_options(self):
-        """Gets available options"""
-        return self.options
+                        opts[s][o] = json.loads(self.parser[s][o])
+        self.options = opts
 
 # Global config options
 smalisca_conf = Config()

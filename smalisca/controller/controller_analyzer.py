@@ -95,13 +95,14 @@ class AnalyzerController(CementBaseController):
             if self.app.pargs.config_file:
                 config.smalisca_conf.read(self.app.pargs.config_file)
             else:
+                log.info("Using default conf (%s)" % config.PROJECT_CONF)
                 config.smalisca_conf.read(config.PROJECT_CONF)
 
             config.smalisca_conf.parse()
 
-            #pprint(config.smalisca_conf.get_options())
-            #exit(1)
-
+            # pprint(config.smalisca_conf.get_options())
+            # print(config.smalisca_conf.options)
+            # exit(1)
 
             # Read SQLite data
             if self.app.pargs.fileformat == "sqlite":
