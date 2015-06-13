@@ -86,13 +86,16 @@ class HelpMessage:
 
     MAIN_HELP = """
     [--] Static Code Analysis (SCA) tool for Baskmali (Smali) files.
- [M`È[M`È[M`È[M`È   """
+    """
 
-    # - Parser -----------------------------------------------------------
+    # - Parser ---------------------------------------------------------------
     PARSER_HELP = "[--] Parse files and extract data based on Smali syntax."
 
     # - Analyzer -------------------------------------------------------------
     ANALYZER_HELP = "[--] Analyze results using an interactive prompt or on the command line."
+
+    # - Web ------------------------------------------------------------------
+    WEB_HELP = "[--] Analyze results using web API."
 
     # s (global search)
     ANALYZER_HELP_S = """
