@@ -100,10 +100,6 @@ class AnalyzerController(CementBaseController):
 
             config.smalisca_conf.parse()
 
-            # pprint(config.smalisca_conf.get_options())
-            # print(config.smalisca_conf.options)
-            # exit(1)
-
             # Read SQLite data
             if self.app.pargs.fileformat == "sqlite":
                 from smalisca.analysis.analysis_sqlite import AnalyzerSQLite
