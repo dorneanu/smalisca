@@ -33,6 +33,6 @@
 """Smalisca main package"""
 
 __appname__ = 'smalisca'
-__version__ = '0.1'
+__version__ = '0.2'
 __author__ = 'Victor Dorneanu <info AAET dornea DOT nu>'
 __license__ = 'MIT'

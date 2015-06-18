@@ -8,6 +8,9 @@ Static Code Analysis for Smali
         :target: https://pypi.python.org/pypi/smalisca
 .. image:: https://img.shields.io/pypi/l/smalisca.svg?style=plastic   
         :target: https://pypi.python.org/pypi/smalisca
+.. image:: https://readthedocs.org/projects/smalisca/badge/?version=latest   
+        :target: http://smalisca.readthedocs.org/en/latest/
+
 
 If you ever have looked at Android applications you know to appreciate
 the ability of analyzing your target at the most advanced level. Dynamic
@@ -81,6 +84,13 @@ At the moment there are some few major functionalities like:
 
   Have a loot at the `analysis page <http://smalisca.readthedocs.org/en/latest/analysis.html>`_ for more information.
 
+* **web API**
+
+  smalisca provides a REST web service in order to easily interact with the results by just using 
+  a web client. This way you can access data in your own (fancy) web application and have a clean
+  separation between backend and frontend. 
+
+  Read more about the available REST API at the :ref:`web API page <http://smalisca.readthedocs.org/en/latest/web-api.html>`_. 
 
 
 * **visualizing**
@@ -153,24 +163,23 @@ First touch
 But first let's have a look at the tools main options::
 
     $ smalisca --help
-                                ___
-                               /\_ \    __
-      ____    ___ ___      __  \//\ \  /\_\    ____    ___     __
-     /',__\ /' __` __`\  /'__`\  \ \ \ \/\ \  /',__\  /'___\ /'__`\
-    /\__, `\/\ \/\ \/\ \/\ \L\.\_ \_\ \_\ \ \/\__, `\/\ \__//\ \L\.\_
+
+                               /\_ \    __                            
+      ____    ___ ___      __  \//\ \  /\_\    ____    ___     __     
+     /',__\ /' __` __`\  /'__`\  \ \ \ \/\ \  /',__\  /'___\ /'__`\   
+    /\__, `\/\ \/\ \/\ \/\ \L\.\_ \_\ \_\ \ \/\__, `\/\ \__//\ \L\.\_ 
     \/\____/\ \_\ \_\ \_\ \__/.\_\/\____\\ \_\/\____/\ \____\ \__/.\_\
      \/___/  \/_/\/_/\/_/\/__/\/_/\/____/ \/_/\/___/  \/____/\/__/\/_/
-
-
+                                                                      
 
     --------------------------------------------------------------------------------
     :: Author:       Victor <Cyneox> Dorneanu
     :: Desc:         Static Code Analysis tool for Smali files
     :: URL:          http://nullsecurity.net, http://{blog,www}.dornea.nu
-    :: Version:      0.1
+    :: Version:      0.2
     --------------------------------------------------------------------------------
 
-    usage: smalisca.py (sub-commands ...) [options ...] {arguments ...}
+    usage: smalisca (sub-commands ...) [options ...] {arguments ...}
 
     [--] Static Code Analysis (SCA) tool for Baskmali (Smali) files.
 
@@ -182,6 +191,9 @@ But first let's have a look at the tools main options::
       parser
         [--] Parse files and extract data based on Smali syntax.
 
+      web
+        [--] Analyze results using web API.
+
     optional arguments:
       -h, --help            show this help message and exit
       --debug               toggle debug output
@@ -189,8 +201,6 @@ But first let's have a look at the tools main options::
       --log-level {debug,info,warn,error,critical}
                             Change logging level (Default: info)
       -v, --version         show program's version number and exit
-
-
 
 
 Parsing
