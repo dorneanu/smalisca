@@ -62,27 +62,27 @@ class WebServer(object):
 
         # SmaliClass
         self.apimanager.create_api(
-            SmaliClass, app=self.app, methods=['GET']
+            SmaliClass, app=self.app, methods=['GET', 'POST']
         )
 
         # SmaliProperty
         self.apimanager.create_api(
-            SmaliProperty, app=self.app, methods=['GET']
+            SmaliProperty, app=self.app, methods=['GET', 'POST']
         )
 
         # SmaliMethod
         self.apimanager.create_api(
-            SmaliMethod, app=self.app, methods=['GET']
+            SmaliMethod, app=self.app, methods=['GET', 'POST']
         )
 
         # SmaliConstString
         self.apimanager.create_api(
-            SmaliConstString, app=self.app, methods=['GET']
+            SmaliConstString, app=self.app, methods=['GET', 'POST']
         )
 
         # SmaliCall
         self.apimanager.create_api(
-            SmaliCall, app=self.app, methods=['GET']
+            SmaliCall, app=self.app, methods=['GET', 'POST']
         )
 
     def run(self):
