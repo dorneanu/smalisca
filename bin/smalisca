@@ -34,6 +34,7 @@ import smalisca.core.smalisca_config as config
 from smalisca.core.smalisca_main import SmaliscaApp, smalisca_signal_handler
 from smalisca.controller.controller_parser import ParserController
 from smalisca.controller.controller_analyzer import AnalyzerController
+from smalisca.controller.controller_web import WebController
 from cement.core import handler, hook
 
 # Add application
@@ -57,6 +58,7 @@ try:
     # Register controllers
     handler.register(ParserController)
     handler.register(AnalyzerController)
+    handler.register(WebController)
 
     # Hooks
     hook.register('post_argument_parsing', hook_post_argument_parsing)
