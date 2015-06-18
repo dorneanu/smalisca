@@ -233,7 +233,7 @@ class ParserController(CementBaseController):
             if self.app.pargs.depth and self.app.pargs.depth > 0:
                 self.depth = self.app.pargs.depth
             else:
-                self.depth = 3
+                self.depth = 1
 
             # Create new concurrent parser instance
             concurrent_parser = ConcurrentParser(
