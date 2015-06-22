@@ -25,7 +25,7 @@ Changelog
 
     * Added REST API to access the SQLite DB
     * Use http://<host>:<port>/api/<table name> to access JSON data
-    * Based on `Flask <http://flask.pocoo.org/`_ and `Flask Restless <https://flask-restless.readthedocs.org/en/latest/>`_
+    * Based on `Flask <http://flask.pocoo.org/>`_ and `Flask Restless <https://flask-restless.readthedocs.org/en/latest/>`_
 
 
 0.1 (2015-04-01)
