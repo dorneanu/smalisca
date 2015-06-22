@@ -90,7 +90,7 @@ At the moment there are some few major functionalities like:
   a web client. This way you can access data in your own (fancy) web application and have a clean
   separation between backend and frontend. 
 
-  Read more about the available REST API at the :ref:`web API page <http://smalisca.readthedocs.org/en/stable/web-api.html>`_. 
+  Read more about the available REST API at the `web API page <http://smalisca.readthedocs.org/en/stable/web-api.html>`_. 
 
 
 * **visualizing**
