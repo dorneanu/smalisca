@@ -2,6 +2,31 @@
 Changelog
 ===========
 
+0.2 (2015-06-XX)
+
+* Bugs
+
+    * Fixed issue #2
+    * Fixed issue #3
+    * Fixed issue described in pull #5
+
+* Parsing
+
+    * Added concurrency to the parser
+    * You can specify by "-j" the number of jobs/workers 
+    * Have a look at this `blog post <http://blog.dornea.nu/2015/05/06/adding-concurrency-to-smalisca/>`_
+
+* Configuration
+    
+    * Added configuration files
+    * Specify configuration file by "-c" parameter
+
+* Web API
+
+    * Added REST API to access the SQLite DB
+    * Use http://<host>:<port>/api/<table name> to access JSON data
+    * Based on `Flask <http://flask.pocoo.org/>`_ and `Flask Restless <https://flask-restless.readthedocs.org/en/latest/>`_
+
 
 0.1 (2015-04-01)
 ================

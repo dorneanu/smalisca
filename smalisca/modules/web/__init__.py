@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 #
 # -----------------------------------------------------------------------------
-# File:         __init__.py
-# Created:      2015-03-05
-# Purpose:      Main module
+# File:         modules/__init__.py
+# Created:      2015-06-01
+# Purpose:      Basic Flask stuff
 #
 # Copyright
 # -----------------------------------------------------------------------------
@@ -30,9 +30,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-"""Smalisca main package"""
+from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
 
-__appname__ = 'smalisca'
-__version__ = '0.2'
-__author__ = 'Victor Dorneanu <info AAET dornea DOT nu>'
-__license__ = 'MIT'
+def create_flask_app():
+    app = Flask(__name__)
+    return app

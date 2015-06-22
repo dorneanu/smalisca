@@ -8,6 +8,9 @@ Static Code Analysis for Smali
         :target: https://pypi.python.org/pypi/smalisca
 .. image:: https://img.shields.io/pypi/l/smalisca.svg?style=plastic   
         :target: https://pypi.python.org/pypi/smalisca
+.. image:: https://readthedocs.org/projects/smalisca/badge/?version=stable   
+        :target: http://smalisca.readthedocs.org/en/stable/
+
 
 If you ever have looked at Android applications you know to appreciate
 the ability of analyzing your target at the most advanced level. Dynamic
@@ -45,7 +48,7 @@ At the moment there are some few major functionalities like:
 
   You can then **export** the results as **JSON** or **SQLite**.
 
-  Have a loot at the `parsing page <http://smalisca.readthedocs.org/en/latest/parsing.html>`_ for more information.
+  Have a loot at the `parsing page <http://smalisca.readthedocs.org/en/stable/parsing.html>`_ for more information.
 
 
 
@@ -79,8 +82,15 @@ At the moment there are some few major functionalities like:
     $ ./smalisca.py analyzer -i results.sqlite -f sqlite -c cmd.txt
     ...
 
-  Have a loot at the `analysis page <http://smalisca.readthedocs.org/en/latest/analysis.html>`_ for more information.
+  Have a loot at the `analysis page <http://smalisca.readthedocs.org/en/stable/analysis.html>`_ for more information.
 
+* **web API**
+
+  smalisca provides a REST web service in order to easily interact with the results by just using 
+  a web client. This way you can access data in your own (fancy) web application and have a clean
+  separation between backend and frontend. 
+
+  Read more about the available REST API at the :ref:`web API page <http://smalisca.readthedocs.org/en/stable/web-api.html>`_. 
 
 
 * **visualizing**
@@ -103,12 +113,12 @@ At the moment there are some few major functionalities like:
     :: INFO       Wrote results to /tmp/classes.pdf
     smalisca>
 
-  Have a loot at the `drawing page <http://smalisca.readthedocs.org/en/latest/drawing.html>`_ for more information.
+  Have a loot at the `drawing page <http://smalisca.readthedocs.org/en/stable/drawing.html>`_ for more information.
 
 Screenshots
 ===========
 
-.. figure:: http://smalisca.readthedocs.org/en/latest/_images/smalisca_search_classes.png
+.. figure:: http://smalisca.readthedocs.org/en/stable/_images/smalisca_search_classes.png
    :scale: 99%
    :alt: Basic usage
    
@@ -116,20 +126,20 @@ Screenshots
    
 
 
-.. figure:: http://smalisca.readthedocs.org/en/latest/_images/smalisca_dxcl_dot_0.png
+.. figure:: http://smalisca.readthedocs.org/en/stable/_images/smalisca_dxcl_dot_0.png
    :scale: 99%
    :alt: Cross calls
    
    Basic relationships between classes and modules.
 
 
-Have a look at the `screenshots page <http://smalisca.readthedocs.org/en/latest/screenshots.html>`_.
+Have a look at the `screenshots page <http://smalisca.readthedocs.org/en/stable/screenshots.html>`_.
 
 
 Installation
 ============
 
-Refer to the `installation page <http://smalisca.readthedocs.org/en/latest/installation.html>`_.
+Refer to the `installation page <http://smalisca.readthedocs.org/en/stable/installation.html>`_.
 Requirements:
 
 * Python (2.x / 3.x)
@@ -153,24 +163,23 @@ First touch
 But first let's have a look at the tools main options::
 
     $ smalisca --help
-                                ___
-                               /\_ \    __
-      ____    ___ ___      __  \//\ \  /\_\    ____    ___     __
-     /',__\ /' __` __`\  /'__`\  \ \ \ \/\ \  /',__\  /'___\ /'__`\
-    /\__, `\/\ \/\ \/\ \/\ \L\.\_ \_\ \_\ \ \/\__, `\/\ \__//\ \L\.\_
+
+                               /\_ \    __                            
+      ____    ___ ___      __  \//\ \  /\_\    ____    ___     __     
+     /',__\ /' __` __`\  /'__`\  \ \ \ \/\ \  /',__\  /'___\ /'__`\   
+    /\__, `\/\ \/\ \/\ \/\ \L\.\_ \_\ \_\ \ \/\__, `\/\ \__//\ \L\.\_ 
     \/\____/\ \_\ \_\ \_\ \__/.\_\/\____\\ \_\/\____/\ \____\ \__/.\_\
      \/___/  \/_/\/_/\/_/\/__/\/_/\/____/ \/_/\/___/  \/____/\/__/\/_/
-
-
+                                                                      
 
     --------------------------------------------------------------------------------
     :: Author:       Victor <Cyneox> Dorneanu
     :: Desc:         Static Code Analysis tool for Smali files
     :: URL:          http://nullsecurity.net, http://{blog,www}.dornea.nu
-    :: Version:      0.1
+    :: Version:      0.2
     --------------------------------------------------------------------------------
 
-    usage: smalisca.py (sub-commands ...) [options ...] {arguments ...}
+    usage: smalisca (sub-commands ...) [options ...] {arguments ...}
 
     [--] Static Code Analysis (SCA) tool for Baskmali (Smali) files.
 
@@ -182,6 +191,9 @@ But first let's have a look at the tools main options::
       parser
         [--] Parse files and extract data based on Smali syntax.
 
+      web
+        [--] Analyze results using web API.
+
     optional arguments:
       -h, --help            show this help message and exit
       --debug               toggle debug output
@@ -189,8 +201,6 @@ But first let's have a look at the tools main options::
       --log-level {debug,info,warn,error,critical}
                             Change logging level (Default: info)
       -v, --version         show program's version number and exit
-
-
 
 
 Parsing
@@ -213,7 +223,7 @@ I'll first **parse** some directory for **Smali** files before doing the analysi
     :: INFO         Wrote results to fakebanker.sqlite
     :: INFO       Finished scanning
 
-Also have a look at the `parsing page <http://smalisca.readthedocs.org/en/latest/parsing.html>`_ for further information.
+Also have a look at the `parsing page <http://smalisca.readthedocs.org/en/stable/parsing.html>`_ for further information.
 
 
 Analyzing
@@ -243,13 +253,13 @@ directly or use *smaliscas* **analysis** features::
     | 10 | Landroid/support/v4/app/ShareCompat$ShareCompatImpl                                     | interface abstract | Landroid.support.v4.app  | 5     |
     +----+-----------------------------------------------------------------------------------------+--------------------+--------------------------+-------+
 
-Also refer to the `analysis page <http://smalisca.readthedocs.org/en/latest/analysis.html>`_ for more available **commands** and options.
+Also refer to the `analysis page <http://smalisca.readthedocs.org/en/stable/analysis.html>`_ for more available **commands** and options.
 
 
 Drawing
 -------
 
-Please refer to the `drawing page <http://smalisca.readthedocs.org/en/latest/drawing.html>`_ for full examples.
+Please refer to the `drawing page <http://smalisca.readthedocs.org/en/stable/drawing.html>`_ for full examples.
 
 
 License

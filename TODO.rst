@@ -5,7 +5,7 @@ TODO
 * modules/module_smali_parser:
 
     * Consider Windows paths
-    * multithreading for parsing operations
+    * [DONE] multithreading for parsing operations
 
 * analysis
 

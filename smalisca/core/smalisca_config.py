@@ -32,11 +32,11 @@
 
 """Global configuration file for smalisca"""
 
-import os
-import sys
-import tempfile
 import smalisca
-from pyfiglet import Figlet, figlet_format
+import codecs
+import configparser
+import json
+from pyfiglet import Figlet
 
 # General project information
 PROJECT_NAME = "smalisca"
@@ -45,7 +45,8 @@ PROJECT_AUTHOR = "Victor <Cyneox> Dorneanu"
 PROJECT_VERSION = smalisca.__version__
 PROJECT_BANNER = PROJECT_NAME + " " + PROJECT_VERSION + "-" + PROJECT_DESC
 PROJECT_URL = "http://nullsecurity.net, http://{blog,www}.dornea.nu"
-PROJECT_MAIL = "tbd"
+PROJECT_MAIL = "info AEEET dornea DOT nu"
+PROJECT_CONF = "smalisca/data/config/config.conf"
 
 # Common CLI arguments
 COMMON_ARGS = [
@@ -63,7 +64,7 @@ JSON_SETTINGS = {
 }
 
 # Input/Output formats
-# At the moment you can export the results as json/sqlite
+# [MaÑAt the moment you can export the results as json/sqlite
 # but you can only analyze sqlite.
 PARSER_OUTPUT_CHOICES = ('json', 'sqlite')
 ANALYZER_INPUT_CHOICES = ('sqlite',)
@@ -87,11 +88,14 @@ class HelpMessage:
     [--] Static Code Analysis (SCA) tool for Baskmali (Smali) files.
     """
 
-    # - Parser -----------------------------------------------------------
+    # - Parser ---------------------------------------------------------------
     PARSER_HELP = "[--] Parse files and extract data based on Smali syntax."
 
     # - Analyzer -------------------------------------------------------------
     ANALYZER_HELP = "[--] Analyze results using an interactive prompt or on the command line."
+
+    # - Web ------------------------------------------------------------------
+    WEB_HELP = "[--] Analyze results using web API."
 
     # s (global search)
     ANALYZER_HELP_S = """
@@ -129,10 +133,10 @@ class HelpMessage:
     ANALYZER_HELP_SP = """
     [--] Search for properties
 
-    Specify by '-c' in which column you'd like to search for a pattern (specified by '-p').
+    Sp[MaÑecify by '-c' in which column you'd like to search for a pattern (specified by '-p').
     Examples:
 
-    a) List available columns
+    a) Lis[MaÑt available columns
         sp -c ?
 
     b) Search for pattern "test" in column "property_name"
@@ -180,7 +184,7 @@ class HelpMessage:
     c) Search for pattern "test2" in column "method_type"
         sm -c method_type -p test2
 
-    You can also exclude table fields using '-x':
+    You can al[MaÑso exclude table fields using '-x':
 
     a) Exclude only one column
         sm -c method_type -p test2 -x depth
@@ -223,121 +227,43 @@ class HelpMessage:
     """
 
 
-class GraphConfig(object):
-    """ Graph settings
+class Config(object):
+    """ Configuration
 
-        Have a look at http://www.graphviz.org/doc/info/attrs.html
-        for full documentation.
+        Maintains basic configuration like Graphviz options stuff.
+
+        Attributes:
+            sections: Available sections
+            options: Parsed options
     """
 
-    class ClassGraphConfig(object):
-        """ Graphviz configuration for class graphs"""
+    # Specify sections to be expected
+    sections = {
+        'graphviz': ['classes', 'calls']
+    }
 
-        # General graph styles
-        graph_styles = {
-            'graph': {
-                'rankdir': 'LR',
-                'splines': 'ortho',
-                'bgcolor': 'black'
-            },
-            'nodes': {
-                'shape': 'record',
-                'color': 'orange',
-                'fontcolor': 'orange',
-                'style': 'filled',
-                'fillcolor': '#1c1c1c'
-            },
-            'edges': {
-                'color': 'orange'
-            }
-        }
+    def __init__(self):
+        self.parser = configparser.SafeConfigParser(allow_no_value=True)
+        self.options = {}
 
-        # Subgraph (cluster) styles
-        cluster_styles = {
-            'graph': {},
-            'nodes': {
-                'shape': 'note',
-                'color': '#1e1e1e',
-                'fontcolor': 'white',
-                'width': '10'
-            },
-            'edges': {
-                'color': '#3B3131',
-            }
-        }
+    def read(self, filename):
+        """Read config from file"""
+        with codecs.open(filename, 'r', encoding='utf-8') as f:
+            self.parser.readfp(f)
+            f.close()
 
-        # Class node attributes
-        class_nodes = {
-            'nodes': {
-                'color': 'orange',
-                'fontcolor': 'grey',
-                'style': 'rounded',
-                'shape': 'note'
-            }
-        }
+    def parse(self):
+        """Create dicts from config variables"""
+        # Run through sections and check for options
+        opts = {}
+        for s in self.sections:
+            if self.parser.has_section(s):
+                opts[s] = {}
+                for o in self.sections[s]:
+                    if self.parser.has_option(s, o):
+                        # Create JSON from string
+                        opts[s][o] = json.loads(self.parser[s][o])
+        self.options = opts
 
-    class CallsGraphConfig(object):
-        """ Graphviz configuration for calls graph"""
-
-        # General graph styles
-        graph_styles = {
-            'graph': {
-                'rankdir': 'LR',
-                'splines': 'false',
-                'bgcolor': 'black',
-                'color': 'yellow',
-                'labeljust': 'r',
-                'fontcolor': 'orange',
-                'ranksep': '2.8 equally',
-                'nodesep': '.05'
-            },
-            'nodes': {
-                'shape': 'box3d',
-                'color': 'white',
-                'fontcolor': 'grey',
-                'width': '7'
-            },
-            'edges': {
-                'color': 'orange',
-                'style': 'invis'
-            },
-        }
-
-        # Subgraph (cluster) styles
-        cluster_styles = {
-            'graph': {
-                'rankdir': 'LR',
-                'splines': 'false',
-                'labeljust': 'r',
-                'labelfontsize': '60.5',
-                'color': '#B87333',
-            },
-            'nodes': {
-                'shape': 'Mrecord',
-                'color': '#3F602B',
-                'fontcolor': 'orange',
-                'width': '7'
-            },
-            'edges': {
-                'color': 'orange',
-                'style': 'invis'
-            },
-        }
-
-        # Method nodes styles
-        method_nodes = {
-            'nodes': {
-                'color': '#1c1c1c',
-                'style': 'filled',
-                'shape': 'box',
-                'fontcolor': 'orange'
-            }
-        }
-
-        # Method edges styles
-        method_edges = {
-            'edges': {
-                'color': '#3B3131',
-                'style': 'solid'
-            }
-        }
+# Global config options
+smalisca_conf = Config()

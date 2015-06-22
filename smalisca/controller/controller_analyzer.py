@@ -40,6 +40,7 @@ from smalisca.analysis.analysis_shell import AnalyzerShell
 from cement.core import controller
 from cement.core.controller import CementBaseController
 
+from pprint import pprint
 
 class AnalyzerController(CementBaseController):
     """ Controller for analyzing previously parsed Smali files
@@ -60,6 +61,10 @@ class AnalyzerController(CementBaseController):
         description = config.HelpMessage.ANALYZER_HELP
 
         arguments = config.COMMON_ARGS + [
+            (['--config'],
+                dict(
+                    dest="config_file",
+                    help="Specify config file")),
             (['-i', '--input'],
                 dict(
                     dest="filename", help="Specify results file to read from",
@@ -85,6 +90,15 @@ class AnalyzerController(CementBaseController):
 
             # Analysis obj
             analysis = None
+
+            # Check for config file
+            if self.app.pargs.config_file:
+                config.smalisca_conf.read(self.app.pargs.config_file)
+            else:
+                log.info("Using default conf (%s)" % config.PROJECT_CONF)
+                config.smalisca_conf.read(config.PROJECT_CONF)
+
+            config.smalisca_conf.parse()
 
             # Read SQLite data
             if self.app.pargs.fileformat == "sqlite":

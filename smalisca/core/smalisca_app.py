@@ -280,7 +280,7 @@ class App:
         """Write app object as JSON to file"""
         try:
             with open(filename, 'w+') as f:
-                json.dump(self.to_json(), f, indent=JSON_SETTINGS['indent'])
+                f.write(self.to_json())
 
         except IOError:
             log.error("Couldn't save data to %s" % filename)
