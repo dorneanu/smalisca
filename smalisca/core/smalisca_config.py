@@ -32,6 +32,7 @@
 
 """Global configuration file for smalisca"""
 
+from __future__ import print_function, absolute_import, unicode_literals, division
 import smalisca
 import codecs
 import configparser
@@ -46,7 +47,8 @@ PROJECT_VERSION = smalisca.__version__
 PROJECT_BANNER = PROJECT_NAME + " " + PROJECT_VERSION + "-" + PROJECT_DESC
 PROJECT_URL = "http://nullsecurity.net, http://{blog,www}.dornea.nu"
 PROJECT_MAIL = "info AEEET dornea DOT nu"
-PROJECT_CONF = "smalisca/data/config/config.conf"
+PROJECT_CONF = smalisca.get_file("data/config/config.conf")
+
 
 # Common CLI arguments
 COMMON_ARGS = [

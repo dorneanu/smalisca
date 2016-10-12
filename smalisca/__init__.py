@@ -33,6 +33,14 @@
 """Smalisca main package"""
 
 __appname__ = 'smalisca'
-__version__ = '0.2'
+__version__ = '0.2.1'
 __author__ = 'Victor Dorneanu <info AAET dornea DOT nu>'
 __license__ = 'MIT'
+
+import os
+
+_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+
+def get_file(path):
+    return os.path.join(_ROOT, path)
