@@ -77,7 +77,8 @@ setup(
         'prettytable',
         'flask==0.10.1',
         'Flask-SQLAlchemy',
-        'Flask-Restless'
+        'Flask-Restless',
+	'configparser'
     ],
     classifiers=[
         'Programming Language :: Python',
