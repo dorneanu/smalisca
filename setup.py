@@ -75,7 +75,7 @@ setup(
         'sqlalchemy',
         'pyfiglet',
         'prettytable',
-        'flask==0.10.1',
+        'flask',
         'Flask-SQLAlchemy',
         'Flask-Restless',
 	'configparser'
