@@ -75,9 +75,10 @@ setup(
         'sqlalchemy',
         'pyfiglet',
         'prettytable',
-        'flask==0.10.1',
+        'flask',
         'Flask-SQLAlchemy',
-        'Flask-Restless'
+        'Flask-Restless',
+	'configparser'
     ],
     classifiers=[
         'Programming Language :: Python',
