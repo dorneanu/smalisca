@@ -603,12 +603,12 @@ class AnalyzerShell(cmd.Cmd):
             if args.search_type:
                 # Print available columns
                 if args.search_type == '?':
-                    print([c['name'] for c in t_fields])
+                    print([c['name'] for c in self.property_fields])
                     return
 
                 # Search
                 if args.search_pattern:
-                    if any(c['name'] == args.search_type for c in property_fields):
+                    if any(c['name'] == args.search_type for c in self.property_fields):
                         p = {
                             'type': args.search_type,
                             'pattern': args.search_pattern
