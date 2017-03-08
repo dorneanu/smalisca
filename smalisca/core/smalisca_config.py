@@ -135,10 +135,10 @@ class HelpMessage:
     ANALYZER_HELP_SP = """
     [--] Search for properties
 
-    Sp[MaÑecify by '-c' in which column you'd like to search for a pattern (specified by '-p').
+    Specify by '-c' in which column you'd like to search for a pattern (specified by '-p').
     Examples:
 
-    a) Lis[MaÑt available columns
+    a) List available columns
         sp -c ?
 
     b) Search for pattern "test" in column "property_name"
@@ -186,7 +186,7 @@ class HelpMessage:
     c) Search for pattern "test2" in column "method_type"
         sm -c method_type -p test2
 
-    You can al[MaÑso exclude table fields using '-x':
+    You can also exclude table fields using '-x':
 
     a) Exclude only one column
         sm -c method_type -p test2 -x depth
