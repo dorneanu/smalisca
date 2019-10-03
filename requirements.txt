@@ -1,5 +1,5 @@
 cement==2.6.0
-Flask==0.10.1
+Flask==1.0
 Flask-Restless==0.17.0
 Flask-SQLAlchemy==2.0
 graphviz==0.4.4
